@@ -1,5 +1,7 @@
 using System.Drawing;
 using TagCloud2;
+using TagCloud2.Settings;
+using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
@@ -9,14 +11,15 @@ public class CircularCloudLayouter : ICloudLayouter
     private const int CoefficientAngle = 14;
     private readonly List<Rectangle> rectangles;
     private double angle;
-    public CircularCloudLayouter(SettingsTagCloud settingsTagCloud)
+    private ITagCloudSettings TagCloudSettings;
+    public CircularCloudLayouter(ITagCloudSettings appSettings)
     {
-        Validate(settingsTagCloud.Center);
+        Validate(appSettings.Center);
         rectangles = [];
-        Start = settingsTagCloud.Center;
+        TagCloudSettings = appSettings;
     }
 
-    public Point Start { get; }
+    public Point Start => TagCloudSettings.Center;
 
     public Rectangle PutNextRectangle(Size rectangleSize)
     {

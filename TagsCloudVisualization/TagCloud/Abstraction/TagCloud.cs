@@ -8,19 +8,30 @@ namespace TagsCloudVisualization;
 // здесь бы еще паттерн строитель, но это уже overhead.
 public class TagCloud : IDisposable
 {
-    private readonly ICloudLayouter cloudLayouter;
+    private readonly ICloudLayouter _cloudLayouter;
 
-    private readonly ITagCloudImage tagCloudImage;
+    private readonly FactoryCloudBitMap _factoryCloudBitMap;
+
+    private ITagCloudImage _tagCloudImage;
+
+    private readonly ITagCloudWordLoader _fileLoader;
+
+    private List<WordPopular> _wordPopulars = [];
 
     private bool IsDisposed;
 
-    public TagCloud(ICloudLayouter cloudLayouter, ITagCloudImage tagCloudImage)
+    public TagCloud(ICloudLayouter cloudLayouter, FactoryCloudBitMap factory, ITagCloudWordLoader fileLoader)
     {
-        Validate(cloudLayouter, tagCloudImage);
-        this.cloudLayouter = cloudLayouter;
-        this.tagCloudImage = tagCloudImage;
+        _cloudLayouter = cloudLayouter;
+        _factoryCloudBitMap = factory;
+        _fileLoader = fileLoader;
     }
 
+    public void CreateFilePhotoInBuffer()
+    {
+        _tagCloudImage = _factoryCloudBitMap.Create();
+        Validate(_cloudLayouter, _tagCloudImage);
+    }
 
     private static void Validate(ICloudLayouter cloudLayouter, ITagCloudImage tagCloudImage)
     {
@@ -30,22 +41,28 @@ public class TagCloud : IDisposable
     }
 
     // было красиво было бы если, в аргументах принимали бы массив tags, по их популярности, а не random, но по задачи этого делать не нужно
-    public void GenerateCloud(List<WordPopular> words)
+    public void GenerateCloud()
     {
-        for (var i = 0; i < words.Count; i++)
+        // todo: проверка, words пустой
+        for (var i = 0; i < _wordPopulars.Count; i++)
         {
-            var sizeF = tagCloudImage.GetSizeWord(words[i]);
-            var size = (sizeF with { Height = sizeF.Height, Width = sizeF.Width + 10}).ToSize();
-            
-            var rec = cloudLayouter.PutNextRectangle(size);
-            var RecCloud = new RectangleTagCloud(rec, words[i].Word);
-            tagCloudImage.Draw(RecCloud);
+            var sizeF = _tagCloudImage.GetSizeWord(_wordPopulars[i]);
+            var size = (sizeF with { Height = sizeF.Height, Width = sizeF.Width + 10 }).ToSize();
+
+            var rec = _cloudLayouter.PutNextRectangle(size);
+            var RecCloud = new RectangleTagCloud(rec, _wordPopulars[i].Word);
+            _tagCloudImage.Draw(RecCloud);
         }
+    }
+
+    public void LoadTextFile()
+    {
+        _wordPopulars = _fileLoader.LoadWord();
     }
 
     public void Save()
     {
-        tagCloudImage.Save();
+        _tagCloudImage.Save();
     }
 
     public void Dispose()
@@ -62,7 +79,7 @@ public class TagCloud : IDisposable
                 // потенциально это может в будущем пригодится, еще есть tag 2 и 3.
             }
 
-            tagCloudImage.Dispose();
+            _tagCloudImage.Dispose();
 
             IsDisposed = true;
         }

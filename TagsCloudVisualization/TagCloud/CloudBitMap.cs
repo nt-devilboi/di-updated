@@ -1,68 +1,66 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using TagCloud2;
+using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
 public class CloudBitMap : ITagCloudImage
 {
-    private readonly Bitmap bitmap;
-    private readonly string filePath;
-    private readonly Graphics graphics;
-    private readonly Pen pen = new(Color.Red);
-    private bool isDisposed;
-    private bool isSave;
-    private string nameFile;
+    private readonly Bitmap _bitmap;
+    private readonly string _filePath;
+    private readonly Graphics _graphics;
+    private readonly Pen _pen = new(Color.Red);
+    private bool _isDisposed;
+    private bool _isSave;
+    private readonly string _nameFile;
 
-    public CloudBitMap(SettingsTagCloud settingsTagCloud, string nameFile)
+    public CloudBitMap(ITagCloudSettings tagCloudSettings)
     {
-        this.nameFile = nameFile;
-        Validate(settingsTagCloud.PathDirectory, settingsTagCloud.Size.Width, settingsTagCloud.Size.Height);
-
-        bitmap = new Bitmap(settingsTagCloud.Size.Width, settingsTagCloud.Size.Height);
-        graphics = Graphics.FromImage(bitmap);
-        graphics.Clear(Color.Black);
-        filePath = settingsTagCloud.PathDirectory;
+        
+        _nameFile = tagCloudSettings.NameFile;
+        _bitmap = new Bitmap(tagCloudSettings.Size.Width, tagCloudSettings.Size.Height);
+        _graphics = Graphics.FromImage(_bitmap);
+        _graphics.Clear(Color.Black);
+        _filePath = tagCloudSettings.PathDirectory;
     }
 
-    public Size Size() => bitmap.Size;
+    public Size Size() => _bitmap.Size;
 
     public void Draw(Rectangle rec)
     {
-        graphics.DrawRectangle(pen, rec);
+        _graphics.DrawRectangle(_pen, rec);
     }
 
     public void Draw(RectangleTagCloud rec)
     {
-        graphics.DrawString(rec.text, rec.font, Brushes.Blue, rec.Rectangle);
+        _graphics.DrawString(rec.text, rec.font, Brushes.Blue, rec.Rectangle);
 
-        graphics.DrawRectangle(pen, rec.Rectangle);
+        _graphics.DrawRectangle(_pen, rec.Rectangle);
     }
 
     public SizeF GetSizeWord(WordPopular word)
     {
-        return graphics.MeasureString(word.Word, new Font("Aria", 24, FontStyle.Bold));
+        return _graphics.MeasureString(word.Word, new Font("Aria", 24, FontStyle.Bold));
     }
 
     public void Save()
     {
-        if (isSave)
+        if (_isSave)
         {
             Console.WriteLine("уже сохранена");
             return;
         }
 
-        var saveFilePath = string.Join("",filePath, $"/tagCloud-({nameFile}).png");
-        bitmap.Save(saveFilePath, ImageFormat.Png);
+        var saveFilePath = string.Join("", _filePath, $"/tagCloud-({_nameFile}).png");
+        _bitmap.Save(saveFilePath, ImageFormat.Png);
         Console.WriteLine($"file saved in {saveFilePath}");
-        isSave = true;
+        _isSave = true;
     }
 
 
-    private static void Validate(string filePath, int width, int height)
+    private static void Validate(int width, int height) // todo: проверка на то, что файла не существуте.
     {
-        if (!Directory.Exists(filePath)) throw new DirectoryNotFoundException($"not correct path {filePath}");
-        if (filePath[^1] == '/') throw new ArgumentException("PathShouldBeWithout \"\\\"");
         if (width <= 0 || height <= 0) throw new ArgumentException("size of image should be with positive number");
     }
 
@@ -73,18 +71,18 @@ public class CloudBitMap : ITagCloudImage
 
     private void Dispose(bool fromMethod)
     {
-        if (!isDisposed)
+        if (!_isDisposed)
         {
             if (fromMethod)
             {
                 Save();
             }
 
-            bitmap.Dispose();
-            graphics.Dispose();
-            pen.Dispose();
+            _bitmap.Dispose();
+            _graphics.Dispose();
+            _pen.Dispose();
 
-            isDisposed = true;
+            _isDisposed = true;
         }
     }
 }

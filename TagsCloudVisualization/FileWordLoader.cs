@@ -1,11 +1,18 @@
+using TagsCloudVisualization.Settings;
+
 namespace TagCloud2;
 
 public class FileWordLoader : ITagCloudWordLoader
 {
-    public List<WordPopular> LoadWord(string path)
+    private IWordLoaderSettings _wordLoaderSettings;
+    public FileWordLoader(AppSettings appSettings)
+    {
+        _wordLoaderSettings = appSettings.WordLoaderSettings;
+    }
+    public List<WordPopular> LoadWord()
     {
         var dict = new Dictionary<string, int>();
-        using var reader = new StreamReader(path);
+        using var reader = new StreamReader(_wordLoaderSettings.Path);
 
         var line = reader.ReadLine();
         while (line != null)

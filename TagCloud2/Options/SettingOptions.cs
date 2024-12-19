@@ -4,14 +4,14 @@ using CommandLine;
 namespace TagCloud2.Options;
 
 
-[Verb("settings")]
+[Verb("SetConfigPhoto")]
 public class SettingOptions
 {
     [Option('s', "size", Required = true, HelpText = "size of image formate WxH")]
     public string Size { get; set; }
 
     [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos")]
-    public string Path { get; set; }
+    public string Directory { get; set; }
 
     [Option('n', "NameFile", Required = true, HelpText = "Name Of Photos")]
     public string Name { get; set; }
