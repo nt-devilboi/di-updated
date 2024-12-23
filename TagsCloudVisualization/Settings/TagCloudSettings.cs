@@ -1,30 +1,14 @@
 using System.Drawing;
-using TagsCloudVisualization.Settings;
 
-namespace TagCloud2.Settings;
+namespace TagsCloudVisualization.Settings;
 
-public class TagCloudSettings : ITagCloudSettings
+public class TagCloudSettings
 {
-    private string _pathDirectory;
-    private string _nameFile;
     public Size Size { get; set; }
 
-    public string PathDirectory
-    {
-        get => _pathDirectory;
-        set
-        {
-            if (!Directory.Exists(value)) throw new DirectoryNotFoundException($"not correct path {value}");
-            if (value[^1] == '/') throw new ArgumentException("PathShouldBeWithout \"\\\"");
+    public string PathDirectory { get; set; }
 
+    public string NamePhoto { get; set; }
 
-            _pathDirectory = value;
-        }
-    }
-
-    public string NameFile
-    {
-        get => _nameFile;
-        set => _nameFile = value;
-    }
+    public Point Center => new(Size.Width / 2, Size.Height / 2);
 }

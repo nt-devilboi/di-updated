@@ -1,6 +1,6 @@
-namespace TagCloud2;
+namespace TagsCloudVisualization;
 
-public interface ITagCloudWordLoader
+public interface IWordLoader
 {
     List<WordPopular> LoadWord();
 }

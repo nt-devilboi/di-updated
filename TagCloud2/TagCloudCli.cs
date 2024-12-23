@@ -1,18 +1,23 @@
 using CommandLine;
 using TagCloud2.Options;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Settings;
 
 namespace TagCloud2;
 
 public class TagCloudCli : ITagCloudController
 {
-    private TagCloud _tagCloud;
-    private AppSettings _appSettings;
+    private readonly AppSettings
+        _appSettings; // todo: убрать и если нужны настрйоки брать tagClound или оттуда, где они используются
 
-    public TagCloudCli(TagCloud tagCloud, AppSettings appSettings)
+    private readonly FactoryCloudBitMap _factoryCloudBitMap;
+    private readonly TagCloud _tagCloud;
+
+    public TagCloudCli(TagCloud tagCloud, AppSettings appSettings, FactoryCloudBitMap factoryCloudBitMap)
     {
         _tagCloud = tagCloud;
         _appSettings = appSettings;
+        _factoryCloudBitMap = factoryCloudBitMap;
     }
 
     public void Run()
@@ -21,57 +26,40 @@ public class TagCloudCli : ITagCloudController
         var args = data?.Split(" ");
         while (args != null)
         {
-            Parser.Default.ParseArguments<SettingOptions, CreateOptions, InfoConfigOptions, CreateTagCloud>(args)
-                .MapResult(
-                    (SettingOptions x) => CreateSettingsForTagCloud(x),
-                    (CreateOptions x) => SetPathTextFile(x),
-                    (InfoConfigOptions x) => DisplayConfig(),
-                    (CreateTagCloud x) => CreateCloud(),
-                errors => new List<Error>(errors));
+            Parser.Default.ParseArguments<InfoConfigOptions, CreateTagCloud>(args)
+                .MapResult( // todo: добавить полиморфизм
+                    (CreateTagCloud x) => CreateCloud(x),
+                    errors => new List<Error>(errors));
 
             args = Console.ReadLine().Split(" ");
         }
     }
 
-    private IEnumerable<Error> CreateCloud()
+    private IEnumerable<Error> CreateCloud(CreateTagCloud createTagCloud)
     {
-        _tagCloud.CreateFilePhotoInBuffer();
-        
-        _tagCloud.LoadTextFile();
-        _tagCloud.GenerateCloud();
+        SetParameters(createTagCloud);
 
-        _tagCloud.Save();
+        // todo: проверить, что можно много облаков делать и все корректо
+        var BitMapImage = _factoryCloudBitMap.Create();
+        if (!BitMapImage.IsSuccess)
+        {
+            Console.WriteLine(BitMapImage.Error);
+            return new List<Error>();
+        }
+
+        var image = _tagCloud.GenerateCloud(BitMapImage.Value);
+
+        image.Save();
 
         return new List<Error>();
     }
 
-    private IEnumerable<Error> DisplayConfig()
+    private void SetParameters(CreateTagCloud createTagCloud)
     {
-        Console.WriteLine("Config Photo");
-        Console.WriteLine($"Directory for photo <{_appSettings.TagCloudSettings.PathDirectory}>");
-        Console.WriteLine($"Name Of PhotoFile <{_appSettings.TagCloudSettings.NameFile}>");
-        Console.WriteLine($"Size Of PhotoFile <{_appSettings.TagCloudSettings.Size}>");
-        Console.WriteLine("-----------------------------");
-
-        Console.WriteLine($"Path of FileText \n <{_appSettings.WordLoaderSettings.Path}>");
-
-        return new List<Error>();
-    }
-
-    private IEnumerable<Error> SetPathTextFile(CreateOptions createOptions)
-    {
-        _appSettings.WordLoaderSettings.Path = createOptions.path;
-
-        return new List<Error>();
-    }
-
-
-    private IEnumerable<Error> CreateSettingsForTagCloud(SettingOptions se)
-    {
-        _appSettings.TagCloudSettings.Size = se.GetSize();
-        _appSettings.TagCloudSettings.NameFile = se.Name;
-        _appSettings.TagCloudSettings.PathDirectory = se.Directory;
-
-        return new List<Error>();
+        _appSettings.TagCloudSettings.PathDirectory = createTagCloud.Directory;
+        _appSettings.TagCloudSettings.Size = createTagCloud.GetSize();
+        _appSettings.TagCloudSettings.NamePhoto = createTagCloud.NamePhoto;
+        _appSettings.WordLoaderSettings.Path = createTagCloud.PathToWords;
+        _appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
     }
 }

@@ -1,11 +1,10 @@
 using System.Drawing;
 
-namespace TagCloud2;
+namespace TagsCloudVisualization;
 
 public class RectangleTagCloud
 {
-    public Font font = new("Aria", 24, FontStyle.Bold);
-    public string text { get; }
+    public Font font = new("Times New Roman", 24, FontStyle.Bold);
     public Rectangle Rectangle;
 
     public RectangleTagCloud(Rectangle rectangle, string text)
@@ -13,4 +12,6 @@ public class RectangleTagCloud
         Rectangle = rectangle;
         this.text = text;
     }
+
+    public string text { get; }
 }

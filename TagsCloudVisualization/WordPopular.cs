@@ -1,13 +1,3 @@
-namespace TagCloud2;
+namespace TagsCloudVisualization;
 
-public class WordPopular
-{
-    public string Word { get; }
-    public int Count { get;  }
-
-    public WordPopular(string word, int count)
-    {
-        Word = word;
-        Count = count;
-    }
-}
+public record WordPopular(string Word, int Count);

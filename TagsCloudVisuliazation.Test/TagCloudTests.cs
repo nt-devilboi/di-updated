@@ -2,28 +2,48 @@ using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework.Interfaces;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisuliazation.Test;
 
 public class TagCloudTests
 {
-    private const string PathPhoto = "./../../../photos/WithErrorFrom";
+    private const string NameFile = "WithErrorFrom";
+    private const string PathDir = "./../../../photos/";
     private TagCloud tagCloud;
+    private TagCloudSettings _settings;
+    private WordLoaderSettings _wordLoaderSettings;
 
     [SetUp]
     public void Setup()
     {
-        var circularCloudLayouter = new CircularCloudLayouter(new Point(500, 500));
-        var tagImage = new CloudBitMap(1000, 1000, PathPhoto); // он сделал бы сразу с record не нужно было бы переписывать на di эххх.
-        tagCloud = new TagCloud(circularCloudLayouter, tagImage);
+        _settings = new TagCloudSettings()
+        {
+            Size = new Size(1000, 1000),
+            PathDirectory = PathDir,
+            NamePhoto = NameFile
+        };
+
+        _wordLoaderSettings = new WordLoaderSettings()
+        {
+            Path = "./../../../text.txt",
+            PathStem = "./../../../mystem.exe"
+        };
+
+        var circularCloudLayouter = new CircularCloudLayouter(_settings);
+        var tagCloudImage = new FileWordLoader(_wordLoaderSettings);
+        tagCloud = new TagCloud(circularCloudLayouter, tagCloudImage);
     }
 
     [Test]
     public void CreateTagCloud_WithoutIntersect()
     {
+        var circularCloudLayouter = new CircularCloudLayouter(_settings);
         var rectangles = new List<Rectangle>();
-        
-        tagCloud.GenerateCloud(50, 100, 100);
+        for (int i = 0; i < 100; i++)
+        {
+            rectangles.Add(circularCloudLayouter.PutNextRectangle(new Size(50, 50)));
+        }
 
         CheckIntercets(rectangles);
     }
@@ -31,23 +51,26 @@ public class TagCloudTests
     [Test]
     public void TagCloud_StartPosition_ShouldBe_In_Image()
     {
-        var circularCloudLayouter = new CircularCloudLayouter(new Point(6, 3));
-        var tagImage = new CloudBitMap(5, 5, "./../../../photos/ph");
-        Action action = () => new TagCloud(circularCloudLayouter, tagImage);
-        action.Should().Throw<ArgumentException>().WithMessage("the start position is abroad of image");
+        _settings = new TagCloudSettings()
+        {
+            Size = new Size(-3, -2),
+            PathDirectory = PathDir,
+            NamePhoto = NameFile
+        };
+        var AbstractFac = new FactoryCloudBitMap(_settings);
+        var result = AbstractFac.Create();
+        result.Error.Should().Be("size of image should be with positive number");
     }
-    
+
     [TearDown]
     public void CheckResult()
     {
-        if (TestContext.CurrentContext.Result.Outcome == ResultState.Failure && 
+        if (TestContext.CurrentContext.Result.Outcome == ResultState.Failure &&
             TestContext.CurrentContext.Test.MethodName!.StartsWith("Create"))
         {
-            TestContext.WriteLine($"Tag cloud visualization saved to file {PathPhoto}/" +
+            TestContext.WriteLine($"Tag cloud visualization saved to file {NameFile}/" +
                                   $" {TestContext.CurrentContext.Test.MethodName}");
         }
-        
-        tagCloud.Dispose();
     }
 
     private static void CheckIntercets(List<Rectangle> rectangles)

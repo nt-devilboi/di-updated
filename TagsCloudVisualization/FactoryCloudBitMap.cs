@@ -1,28 +1,37 @@
-using TagsCloudVisualization;
+using TagsCloudVisualization.Result;
 using TagsCloudVisualization.Settings;
 
-namespace TagCloud2;
+namespace TagsCloudVisualization;
 
 public class FactoryCloudBitMap
 {
-    private ITagCloudSettings _cloudSettings;
+    private readonly TagCloudSettings _cloudSettings;
 
-    public FactoryCloudBitMap(ITagCloudSettings cloudSettings)
+    public FactoryCloudBitMap(TagCloudSettings cloudSettings)
     {
         _cloudSettings = cloudSettings;
     }
 
-    public ITagCloudImage Create()
+    public Result<ITagCloudImage> Create()
     {
-        Validate(_cloudSettings.Size.Width, _cloudSettings.Size.Height, _cloudSettings.PathDirectory, _cloudSettings.NameFile);
+        var result = Validate(_cloudSettings.Size.Width, _cloudSettings.Size.Height, _cloudSettings.PathDirectory,
+            _cloudSettings.NamePhoto);
+        if (!result.IsSuccess) return new Result<ITagCloudImage>(result.Error);
 
-        return new CloudBitMap(_cloudSettings);
+        return new CloudBitMap(_cloudSettings).AsResult<ITagCloudImage>();
     }
-    
-    private static void Validate(int width, int height, string cloudSettingsPathDirectory, string cloudSettingsNameFile) // todo: проверка на то, что файла не существуте.
+
+    private static Result<None> Validate(int width, int height, string path,
+        string fileName) // todo: проверка на то, что файла не существуте.
     {
-        if (width <= 0 || height <= 0) throw new ArgumentException("size of image should be with positive number");
-        if (!Directory.Exists(cloudSettingsPathDirectory)) throw new DirectoryNotFoundException($"not correct path {cloudSettingsPathDirectory}");
-        if (cloudSettingsNameFile[^1] == '/') throw new ArgumentException(@"Path Should Be Without \");
+        return Result.Result
+            .StartCheck(Directory.Exists(path),
+                $"This Directory Not Exists  {path}")
+            .AndCheck(width > 0 && height > 0,
+                "size of image should be with positive number")
+            .AndCheck(path.EndsWith('/'),
+                $@"Path: {path}.  Should Be Directory. Add '/' in end")
+            .AndCheck(!File.Exists($"{path} + {fileName}"),
+                $"The file named {fileName} already exists");
     }
 }

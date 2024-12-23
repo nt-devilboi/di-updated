@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Net;
 using FluentAssertions;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisuliazation.Test;
 
@@ -10,28 +11,48 @@ public class CloudBitMapTests
     [Test]
     public void CloudBitMap_DirectoryShouldBeExist()
     {
-        var filePath = "./../../../OuterWild/notIntersect-50.png";
-        Action action = () => new CloudBitMap(5, 5, filePath);
-        action.Should().Throw<DirectoryNotFoundException>();
+        var filePath = "./../../../OuterWild/";
+        var settings = new TagCloudSettings()
+        {
+            Size = new Size(5, 5),
+            PathDirectory = filePath,
+            NamePhoto = "notIntersect-50.png"
+        };
+
+        var fac = new FactoryCloudBitMap(settings);
+
+        fac.Create().Error.Should().Be($"This Directory Not Exists  {settings.PathDirectory}");
     }
  
     [Test]
     public void CloudBitMap_ShouldBe_SizeWithPositiveNumbers()
     {
         var filePath = "./../../../photos/notIntersect-50.png";
-        Action action = () => new CloudBitMap(-1, 5, filePath);
+        var settings = new TagCloudSettings()
+        {
+            Size = new Size(-5, 5),
+            PathDirectory = filePath,
+            NamePhoto = "notIntersect-50.png"
+        };
+        Action action = () => new CloudBitMap(settings);
         action.Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void CloudBitMap_ShouldBe_CreatePhoto()
     {
-        var filePath = "./../../../photos/test_create_photo.png";
-        var cloudBitMap = new CloudBitMap(30, 300, filePath);
+        var filePath = "./../../../photos/";
+        var settings = new TagCloudSettings()
+        {
+            Size = new Size(30, 300),
+            PathDirectory = filePath,
+            NamePhoto = "notIntersect"
+        };
+        var cloudBitMap = new CloudBitMap(settings);
         
         cloudBitMap.Save();
-        File.Exists(filePath).Should().BeTrue();
-
-        File.Delete(filePath);
+        
+        File.Exists(filePath + "tagCloud-(notIntersect).png").Should().BeTrue();
+        File.Delete(filePath + "tagCloud-(notIntersect).png");
     }
 }

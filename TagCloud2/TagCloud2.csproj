@@ -8,17 +8,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TagsCloudVisualization\TagsCloudVisualization.csproj" />
+        <ProjectReference Include="..\TagsCloudVisualization\TagsCloudVisualization.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Photos\" />
+        <Folder Include="Photos\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="CommandLineParser" Version="2.9.1" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-      <PackageReference Include="SimpleInjector" Version="5.5.0" />
+        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
+        <PackageReference Include="SimpleInjector" Version="5.5.0"/>
     </ItemGroup>
 
 </Project>

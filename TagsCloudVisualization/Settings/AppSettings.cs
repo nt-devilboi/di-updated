@@ -1,11 +1,7 @@
-using System.Drawing;
-using TagCloud2.Settings;
-using TagsCloudVisualization.Settings;
+namespace TagsCloudVisualization.Settings;
 
-namespace TagCloud2;
-
-public class AppSettings(ITagCloudSettings tagCloudSettings, IWordLoaderSettings wordLoaderSettings)
+public class AppSettings(TagCloudSettings tagCloudSettings, WordLoaderSettings wordLoaderSettings)
 {
-    public ITagCloudSettings TagCloudSettings { get; } = tagCloudSettings;
-    public IWordLoaderSettings WordLoaderSettings { get; } = wordLoaderSettings;
+    public TagCloudSettings TagCloudSettings { get; } = tagCloudSettings;
+    public WordLoaderSettings WordLoaderSettings { get; } = wordLoaderSettings;
 }
