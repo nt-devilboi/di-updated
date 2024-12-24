@@ -4,6 +4,7 @@ using SimpleInjector;
 using TagCloud2;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Settings;
+using WeCantSpell.Hunspell;
 
 var serviceCollection = new Container();
 
@@ -19,7 +20,11 @@ serviceCollection.Register<WordLoaderSettings>(Lifestyle.Singleton);
 serviceCollection.Register<ITagCloudController, TagCloudCli>(Lifestyle.Singleton);
 
 serviceCollection.Register<FactoryCloudBitMap>(Lifestyle.Singleton);
+serviceCollection.Register(() =>
+    new Lazy<IProcessOutputReader>(() =>
+        new StemReader(serviceCollection.GetInstance<WordLoaderSettings>())), Lifestyle.Singleton);
 
+serviceCollection.Register(() => WordList.CreateFromFiles("./../../../ru_RU.dic"), Lifestyle.Singleton);
 var application = serviceCollection.GetInstance<ITagCloudController>();
 
 application.Run();

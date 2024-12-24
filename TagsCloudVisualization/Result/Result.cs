@@ -1,6 +1,5 @@
-namespace TagsCloudVisualization.Result;
-
 // это не Result в привычном пониманий. эта монада должна работать только с провекрами условий, не больше. я потом упрощу код, чтоб это было явно видно по коду
+
 public class None
 {
     private None()
@@ -8,16 +7,10 @@ public class None
     }
 }
 
-public class Result<TResult>
+public class Result<TResult>(string? error, TResult result = default)
 {
-    public string? Error;
-    public TResult Value;
-
-    public Result(string? error, TResult result = default)
-    {
-        Error = error;
-        Value = result;
-    }
+    public string? Error = error;
+    public TResult Value = result;
 
     public bool IsSuccess => Error == null;
 }

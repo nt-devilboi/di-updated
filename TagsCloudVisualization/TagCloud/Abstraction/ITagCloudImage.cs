@@ -6,7 +6,7 @@ public interface ITagCloudImage : IDisposable
 {
     Size Size();
     void Draw(Rectangle rec);
-    void Draw(RectangleTagCloud rec);
-    Size GetSizeWord(string word);
+    void DrawString(RectangleTagCloud rec);
+    Size GetSizeWord(string word, int emSize);
     void Save();
 }

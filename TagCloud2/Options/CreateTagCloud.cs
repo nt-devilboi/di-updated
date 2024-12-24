@@ -20,6 +20,9 @@ public class CreateTagCloud
 
     [Option('a', "StemPath", Required = true, HelpText = "Stem Dir")]
     public required string StemPath { get; set; }
+    
+    [Option('e' ,"emSize", Required = true, HelpText = "MaxEmSizeWord")]
+    public required string EmSize { get; set; }
     public Size GetSize()
     {
         var sizeString = Size.Split('x');

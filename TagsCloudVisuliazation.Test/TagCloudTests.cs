@@ -3,16 +3,13 @@ using FluentAssertions;
 using NUnit.Framework.Interfaces;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Settings;
-
 namespace TagsCloudVisuliazation.Test;
 
 public class TagCloudTests
 {
     private const string NameFile = "WithErrorFrom";
     private const string PathDir = "./../../../photos/";
-    private TagCloud tagCloud;
     private TagCloudSettings _settings;
-    private WordLoaderSettings _wordLoaderSettings;
 
     [SetUp]
     public void Setup()
@@ -23,17 +20,7 @@ public class TagCloudTests
             PathDirectory = PathDir,
             NamePhoto = NameFile
         };
-
-        _wordLoaderSettings = new WordLoaderSettings()
-        {
-            Path = "./../../../text.txt",
-            PathStem = "./../../../mystem.exe"
-        };
-
-        var circularCloudLayouter = new CircularCloudLayouter(_settings);
-        var tagCloudImage = new FileWordLoader(_wordLoaderSettings);
-        tagCloud = new TagCloud(circularCloudLayouter, tagCloudImage);
-    }
+  }
 
     [Test]
     public void CreateTagCloud_WithoutIntersect()

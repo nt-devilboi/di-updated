@@ -1,4 +1,3 @@
-using TagsCloudVisualization.Result;
 using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
@@ -24,7 +23,7 @@ public class FactoryCloudBitMap
     private static Result<None> Validate(int width, int height, string path,
         string fileName) // todo: проверка на то, что файла не существуте.
     {
-        return Result.Result
+        return Result
             .StartCheck(Directory.Exists(path),
                 $"This Directory Not Exists  {path}")
             .AndCheck(width > 0 && height > 0,

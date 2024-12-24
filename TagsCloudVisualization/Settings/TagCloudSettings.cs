@@ -11,4 +11,6 @@ public class TagCloudSettings
     public string NamePhoto { get; set; }
 
     public Point Center => new(Size.Width / 2, Size.Height / 2);
+
+    public int EmSize { get; set; }
 }

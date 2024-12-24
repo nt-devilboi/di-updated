@@ -7,20 +7,20 @@ namespace TagsCloudVisualization;
 public class CloudBitMap : ITagCloudImage
 {
     private readonly Bitmap _bitmap;
-    private readonly string _filePath;
     private readonly Graphics _graphics;
-    private readonly string _nameFile;
     private readonly Pen _pen = new(Color.Red);
     private bool _isDisposed;
     private bool _isSave;
+    private TagCloudSettings _tagCloudSettings;
+
+    private static Font DefaultFont(int emSize) => new Font("arial", emSize);
 
     public CloudBitMap(TagCloudSettings tagCloudSettings)
     {
-        _nameFile = tagCloudSettings.NamePhoto;
+        _tagCloudSettings = tagCloudSettings;
         _bitmap = new Bitmap(tagCloudSettings.Size.Width, tagCloudSettings.Size.Height);
         _graphics = Graphics.FromImage(_bitmap);
         _graphics.Clear(Color.Black);
-        _filePath = tagCloudSettings.PathDirectory;
     }
 
     public Size Size()
@@ -33,16 +33,16 @@ public class CloudBitMap : ITagCloudImage
         _graphics.DrawRectangle(_pen, rec);
     }
 
-    public void Draw(RectangleTagCloud rec)
+    public void DrawString(RectangleTagCloud rec)
     {
-        _graphics.DrawString(rec.text, rec.font, Brushes.Blue, rec.Rectangle);
+        _graphics.DrawString(rec.Text, DefaultFont(rec.EmSize), Brushes.Blue, rec.Rectangle);
 
         _graphics.DrawRectangle(_pen, rec.Rectangle);
     }
 
-    public Size GetSizeWord(string word)
+    public Size GetSizeWord(string word, int emSize)
     {
-        return _graphics.MeasureString(word, new Font("Times New Roman", 24, FontStyle.Bold)).ToSize();
+        return _graphics.MeasureString(word, DefaultFont(emSize)).ToSize();
     }
 
     public void Save()
@@ -53,7 +53,8 @@ public class CloudBitMap : ITagCloudImage
             return;
         }
 
-        var saveFilePath = string.Join("", _filePath, $"tagCloud-({_nameFile}).png");
+        var saveFilePath = string.Join("", _tagCloudSettings.PathDirectory,
+            $"tagCloud-({_tagCloudSettings.NamePhoto}).png");
         _bitmap.Save(saveFilePath, ImageFormat.Png);
         Console.WriteLine($"file saved in {saveFilePath}");
         _isSave = true;
