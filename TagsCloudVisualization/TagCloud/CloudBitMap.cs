@@ -1,10 +1,11 @@
 using System.Drawing;
 using System.Drawing.Imaging;
+using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
-public class CloudBitMap : ITagCloudImage
+public class CloudBitMap : ITagCloudImage, ISizeWord
 {
     private readonly Bitmap _bitmap;
     private readonly Graphics _graphics;
@@ -36,8 +37,6 @@ public class CloudBitMap : ITagCloudImage
     public void DrawString(RectangleTagCloud rec)
     {
         _graphics.DrawString(rec.Text, DefaultFont(rec.EmSize), Brushes.Blue, rec.Rectangle);
-
-        _graphics.DrawRectangle(_pen, rec.Rectangle);
     }
 
     public Size GetSizeWord(string word, int emSize)

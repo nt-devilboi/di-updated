@@ -2,6 +2,7 @@ using System.Drawing;
 using CommandLine;
 using TagCloud2.Options;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
 
 namespace TagCloud2;
@@ -48,12 +49,12 @@ public class TagCloudCli : ITagCloudController
             return new List<Error>();
         }
 
-        var image = _tagCloud.GenerateCloud(BitMapImage.Value);
+        var image = _tagCloud.GenerateCloud(BitMapImage.Value, (ISizeWord) BitMapImage.Value);
         if (!image.IsSuccess)
         {
             Console.WriteLine(image.Error);
         }
-        
+
         image.Value.Save();
 
         return new List<Error>();
