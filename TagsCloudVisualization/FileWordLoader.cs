@@ -21,7 +21,7 @@ public class FileWordLoader(
         return reader.ReadLines().Where(x => !string.IsNullOrEmpty(x) && !IsBoring(x))
             .Select(GetWord).Where(wordList.Check).ToWordPopular();
     }
-    
+
     private static string GetWord(string l)
     {
         return l.Split('=').First().ToLower();
