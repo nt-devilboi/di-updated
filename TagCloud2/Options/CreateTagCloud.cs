@@ -10,8 +10,8 @@ public class CreateTagCloud
     [Option('w', "PathWordsFile", Required = true, HelpText = "path of file with words")]
     public required string PathToWords { get; set; }
 
-    [Option('s', "size", Required = true, HelpText = "size of image formate WxH")]
-    public required string Size { get; set; }
+    [Option('s', "size", Required = true, HelpText = "size of image formate WxH", Separator = 'x')]
+    public required IEnumerable<string> Size { get; set; }
 
     [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos")]
     public required string Directory { get; set; }
@@ -50,8 +50,7 @@ public class CreateTagCloud
 
     public Size GetSize()
     {
-        var sizeString = Size.Split('x');
-        // todo: добавить проверки 
-        return new Size(int.Parse(sizeString[0]), int.Parse(sizeString[1]));
+        var size = Size.ToArray();
+        return new Size(int.Parse(size[0]), int.Parse(size[1]));
     }
 }
