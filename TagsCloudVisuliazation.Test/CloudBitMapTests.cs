@@ -39,7 +39,7 @@ public class CloudBitMapTests
     }
 
     [Test]
-    public void CloudBitMap_ShouldBe_CreatePhoto()
+    public void CloudBitMap_ShouldBe_CreatePhotoPng()
     {
         var filePath = "./../../../photos/";
         var settings = new TagCloudSettings()
@@ -55,5 +55,23 @@ public class CloudBitMapTests
         
         File.Exists(filePath + "tagCloud-(notIntersect).png").Should().BeTrue();
         File.Delete(filePath + "tagCloud-(notIntersect).png");
+    }
+    [Test]
+    public void CloudBitMap_ShouldBe_CreatePhotoBmp()
+    {
+        var filePath = "./../../../photos/";
+        var settings = new TagCloudSettings()
+        {
+            Size = new Size(30, 300),
+            PathDirectory = filePath,
+            NamePhoto = "notIntersect",
+            ImageFormat = ImageFormat.Bmp
+        };
+        var cloudBitMap = new CloudBitMap(settings);
+        
+        cloudBitMap.Save();
+        
+        File.Exists(filePath + "tagCloud-(notIntersect).Bmp").Should().BeTrue();
+        File.Delete(filePath + "tagCloud-(notIntersect).Bmp");
     }
 }
