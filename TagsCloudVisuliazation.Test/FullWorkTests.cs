@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Drawing.Imaging;
 using FluentAssertions;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
@@ -16,7 +17,11 @@ public class FullWorkTests
             Size = new Size(1920, 1680),
             EmSize = 50,
             NamePhoto = "TestCreateCloud",
-            PathDirectory = "./../../../photos/"
+            PathDirectory = "./../../../photos/",
+            Font = "arial",
+            ImageFormat = ImageFormat.Png,
+            BackGround = Color.White,
+            ColorWords = Color.Black
         };
 
         var loadWordSettings = new WordLoaderSettings()

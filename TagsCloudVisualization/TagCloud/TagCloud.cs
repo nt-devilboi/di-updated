@@ -3,9 +3,6 @@ using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
-// хочется сразу заиспользовать паттерн мост. использовать класс TagCloud, как абстракцию для создания всех деталей TagCloud
-// замечу, что tagCloud не имеет интерфейса, ибо он по существу никогда не будет иметь другую реализацию, ибо вся логика внутри интерефейсов, а этот класс просто обёртка, которая ничего сама делать и не может. композиция на максиум кароче.
-// здесь бы еще паттерн строитель, но это уже overhead.
 public class TagCloud(ICloudLayouter cloudLayouter, IWordLoader wordLoader, TagCloudSettings tagCloudSettings)
 {
     private static Result<None> Validate(ICloudLayouter cloudLayouter, ITagCloudImage tagCloudImage)
@@ -35,7 +32,8 @@ public class TagCloud(ICloudLayouter cloudLayouter, IWordLoader wordLoader, TagC
             tagCloudImage.DrawString(recCloud);
             emSize = emSize > 14 ? emSize - 1 : 24;
         }
-
+        
+        
         return tagCloudImage.AsResult();
     }
 }

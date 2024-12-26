@@ -9,9 +9,7 @@ namespace TagCloud2;
 
 public class TagCloudCli : ITagCloudController
 {
-    private readonly AppSettings
-        _appSettings; // todo: убрать и если нужны настрйоки брать tagClound или оттуда, где они используются
-
+    private readonly AppSettings _appSettings;
     private readonly FactoryCloudBitMap _factoryCloudBitMap;
     private readonly TagCloud _tagCloud;
 
@@ -28,9 +26,8 @@ public class TagCloudCli : ITagCloudController
         var args = data?.Split(" ");
         while (args != null)
         {
-            Parser.Default.ParseArguments<InfoConfigOptions, CreateTagCloud>(args)
-                .MapResult( // todo: добавить полиморфизм
-                    (CreateTagCloud x) => CreateCloud(x),
+            Parser.Default.ParseArguments<CreateTagCloud>(args)
+                .MapResult(CreateCloud,
                     errors => new List<Error>(errors));
 
             args = Console.ReadLine().Split(" ");
@@ -49,7 +46,7 @@ public class TagCloudCli : ITagCloudController
             return new List<Error>();
         }
 
-        var image = _tagCloud.GenerateCloud(BitMapImage.Value, (ISizeWord) BitMapImage.Value);
+        var image = _tagCloud.GenerateCloud(BitMapImage.Value, (ISizeWord)BitMapImage.Value);
         if (!image.IsSuccess)
         {
             Console.WriteLine(image.Error);
@@ -65,8 +62,13 @@ public class TagCloudCli : ITagCloudController
         _appSettings.TagCloudSettings.PathDirectory = createTagCloud.Directory;
         _appSettings.TagCloudSettings.Size = createTagCloud.GetSize();
         _appSettings.TagCloudSettings.NamePhoto = createTagCloud.NamePhoto;
+        _appSettings.TagCloudSettings.EmSize = int.Parse(createTagCloud.EmSize);
+        _appSettings.TagCloudSettings.ColorWords = createTagCloud.Color;
+        _appSettings.TagCloudSettings.BackGround = createTagCloud.BackgrondColor;
+        _appSettings.TagCloudSettings.ImageFormat = createTagCloud.GetImageFormat();
+        _appSettings.TagCloudSettings.Font = createTagCloud.Font;
+
         _appSettings.WordLoaderSettings.Path = createTagCloud.PathToWords;
         _appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
-        _appSettings.TagCloudSettings.EmSize = int.Parse(createTagCloud.EmSize);
     }
 }

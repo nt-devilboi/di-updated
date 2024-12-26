@@ -38,4 +38,20 @@ public class WordLoaderTests
 
         words.Should().BeEmpty();
     }
+    
+    [Test]
+    public void WordLoader_AllWordsInLowerCase()
+    {
+        var fakeReader = A.Fake<IProcessOutputReader>();
+        var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
+
+        A.CallTo(() => steamReader.Value.ReadLine()).ReturnsNextFromSequence("HELLO", "hello");
+        
+        var wordList = WordList.CreateFromWords(["hello"]);
+   
+        var wordLoader = new FileWordLoader(wordList, steamReader);
+        var words = wordLoader.LoadWord();
+
+        words[0].Should().Be(new WordPopular("hello", 2));
+    }
 }

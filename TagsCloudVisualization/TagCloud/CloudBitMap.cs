@@ -9,39 +9,34 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
 {
     private readonly Bitmap _bitmap;
     private readonly Graphics _graphics;
-    private readonly Pen _pen = new(Color.Red);
     private bool _isDisposed;
     private bool _isSave;
-    private TagCloudSettings _tagCloudSettings;
+    private readonly TagCloudSettings _tagCloudSettings;
 
-    private static Font DefaultFont(int emSize) => new Font("arial", emSize);
+    private  Font GetFont(int emSize) => new(_tagCloudSettings.Font, emSize);
 
     public CloudBitMap(TagCloudSettings tagCloudSettings)
     {
         _tagCloudSettings = tagCloudSettings;
         _bitmap = new Bitmap(tagCloudSettings.Size.Width, tagCloudSettings.Size.Height);
         _graphics = Graphics.FromImage(_bitmap);
-        _graphics.Clear(Color.Black);
+        _graphics.Clear(_tagCloudSettings.BackGround);
     }
 
     public Size Size()
     {
         return _bitmap.Size;
     }
-
-    public void Draw(Rectangle rec)
-    {
-        _graphics.DrawRectangle(_pen, rec);
-    }
-
+    
     public void DrawString(RectangleTagCloud rec)
     {
-        _graphics.DrawString(rec.Text, DefaultFont(rec.EmSize), Brushes.Blue, rec.Rectangle);
+        var brush = new SolidBrush(_tagCloudSettings.ColorWords);
+        _graphics.DrawString(rec.Text, GetFont(rec.EmSize), brush, rec.Rectangle);
     }
 
     public Size GetSizeWord(string word, int emSize)
     {
-        return _graphics.MeasureString(word, DefaultFont(emSize)).ToSize();
+        return _graphics.MeasureString(word, GetFont(emSize)).ToSize();
     }
 
     public void Save()
@@ -53,8 +48,9 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
         }
 
         var saveFilePath = string.Join("", _tagCloudSettings.PathDirectory,
-            $"tagCloud-({_tagCloudSettings.NamePhoto}).png");
-        _bitmap.Save(saveFilePath, ImageFormat.Png);
+            $"tagCloud-({_tagCloudSettings.NamePhoto}).{_tagCloudSettings.ImageFormat}");
+        
+        _bitmap.Save(saveFilePath, _tagCloudSettings.ImageFormat);
         Console.WriteLine($"file saved in {saveFilePath}");
         _isSave = true;
     }
@@ -72,7 +68,6 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
 
             _bitmap.Dispose();
             _graphics.Dispose();
-            _pen.Dispose();
 
             _isDisposed = true;
         }
