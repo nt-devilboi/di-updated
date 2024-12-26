@@ -21,19 +21,7 @@ public class FileWordLoader(
         return reader.ReadLines().Where(x => !string.IsNullOrEmpty(x) && !IsBoring(x))
             .Select(GetWord).Where(wordList.Check).ToWordPopular();
     }
-
-    private WordPopular? ToWordPopular(IDictionary<string, WordPopular> wordPopulars, string s)
-    {
-        if (wordPopulars.TryAdd(s, new WordPopular(s, 0)))
-        {
-            wordPopulars[s].Count++;
-            return wordPopulars[s];
-        }
-
-        wordPopulars[s].Count++;
-        return null;
-    }
-
+    
     private static string GetWord(string l)
     {
         return l.Split('=').First().ToLower();
@@ -42,10 +30,5 @@ public class FileWordLoader(
     private static bool IsBoring(string line)
     {
         return line.Contains("PR") || line.Contains("PART") || line.Contains("CONJ");
-    }
-
-    private List<WordPopular> ParseToWordPopular(Dictionary<string, int> dictionary)
-    {
-        return dictionary.Select(keyPair => new WordPopular(keyPair.Key, keyPair.Value)).ToList();
     }
 }
