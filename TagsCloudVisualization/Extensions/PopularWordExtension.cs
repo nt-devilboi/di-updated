@@ -1,6 +1,4 @@
-using TagsCloudVisualization;
-
-namespace TagsCloudVisuliazation.Test.Extension;
+namespace TagsCloudVisualization.Extensions;
 
 public static class PopularWordExtension
 {

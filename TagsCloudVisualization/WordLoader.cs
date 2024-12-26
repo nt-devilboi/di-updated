@@ -1,6 +1,8 @@
+using System.Collections.Immutable;
+
 namespace TagsCloudVisualization;
 
 public interface IWordLoader
 {
-    List<WordPopular> LoadWord();
+    ImmutableArray<WordPopular> LoadWord();
 }

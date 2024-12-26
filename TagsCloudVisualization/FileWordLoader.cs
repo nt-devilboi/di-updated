@@ -1,4 +1,5 @@
-using TagsCloudVisuliazation.Test.Extension;
+using System.Collections.Immutable;
+using TagsCloudVisualization.Extensions;
 using WeCantSpell.Hunspell;
 
 namespace TagsCloudVisualization;
@@ -8,12 +9,12 @@ public class FileWordLoader(
     Lazy<IProcessOutputReader> steamReader)
     : IWordLoader
 {
-    public List<WordPopular> LoadWord()
+    public ImmutableArray<WordPopular> LoadWord()
     {
         var reader = steamReader.Value;
         var result = GetCorrectWord(reader).ToList();
         result.Sort((prev, cur) => cur.Count.CompareTo(prev.Count));
-        return result;
+        return [..result];
     }
 
     private IEnumerable<WordPopular> GetCorrectWord(IProcessOutputReader reader)

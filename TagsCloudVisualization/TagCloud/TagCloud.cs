@@ -19,7 +19,7 @@ public class TagCloud(ICloudLayouter cloudLayouter, IWordLoader wordLoader, TagC
         if (!result.IsSuccess) return Result.Result.Fail<ITagCloudImage>(result.Error);
 
         var wordPopular = wordLoader.LoadWord();
-        if (wordPopular.Count == 0) return Result.Result.Fail<ITagCloudImage>("Words in Text Zero");
+        if (wordPopular.Length == 0) return Result.Result.Fail<ITagCloudImage>("Words in Text Zero");
         
         
         var emSize = tagCloudSettings.EmSize;
