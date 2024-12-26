@@ -6,45 +6,30 @@ using TagsCloudVisualization.Settings;
 
 namespace TagCloud2;
 
-public class TagCloudCli : ITagCloudController
+public class TagCloudCli(TagCloud tagCloud, AppSettings appSettings, FactoryCloudBitMap factoryCloudBitMap)
+    : ITagCloudController
 {
-    private readonly AppSettings _appSettings;
-    private readonly FactoryCloudBitMap _factoryCloudBitMap;
-    private readonly TagCloud _tagCloud;
-
-    public TagCloudCli(TagCloud tagCloud, AppSettings appSettings, FactoryCloudBitMap factoryCloudBitMap)
-    {
-        _tagCloud = tagCloud;
-        _appSettings = appSettings;
-        _factoryCloudBitMap = factoryCloudBitMap;
-    }
-
     public void Run()
     {
         var data = Console.ReadLine();
         var args = data?.Split(" ");
-        while (args != null)
-        {
-            Parser.Default.ParseArguments<CreateTagCloud>(args)
-                .MapResult(CreateCloud,
-                    errors => new List<Error>(errors));
-
-            args = Console.ReadLine().Split(" ");
-        }
+        Parser.Default.ParseArguments<CreateTagCloud>(args)
+            .MapResult(CreateCloud,
+                errors => new List<Error>(errors));
     }
 
     private IEnumerable<Error> CreateCloud(CreateTagCloud createTagCloud)
     {
         SetParameters(createTagCloud);
-        
-        var bitMapImage = _factoryCloudBitMap.Create();
+
+        var bitMapImage = factoryCloudBitMap.Create();
         if (!bitMapImage.IsSuccess)
         {
             Console.WriteLine(bitMapImage.Error);
             return new List<Error>();
         }
 
-        var image = _tagCloud.GenerateCloud(bitMapImage.Value, (ISizeWord)bitMapImage.Value);
+        var image = tagCloud.GenerateCloud(bitMapImage.Value, (ISizeWord)bitMapImage.Value);
         if (!image.IsSuccess) Console.WriteLine(image.Error);
 
         image.Value.Save();
@@ -54,16 +39,16 @@ public class TagCloudCli : ITagCloudController
 
     private void SetParameters(CreateTagCloud createTagCloud)
     {
-        _appSettings.TagCloudSettings.PathDirectory = createTagCloud.GetDirectory();
-        _appSettings.TagCloudSettings.Size = createTagCloud.GetSize();
-        _appSettings.TagCloudSettings.NamePhoto = createTagCloud.NamePhoto;
-        _appSettings.TagCloudSettings.EmSize = int.Parse(createTagCloud.EmSize);
-        _appSettings.TagCloudSettings.ColorWords = createTagCloud.Color;
-        _appSettings.TagCloudSettings.BackGround = createTagCloud.BackgrondColor;
-        _appSettings.TagCloudSettings.ImageFormat = createTagCloud.GetImageFormat();
-        _appSettings.TagCloudSettings.Font = createTagCloud.Font;
+        appSettings.TagCloudSettings.PathDirectory = createTagCloud.GetDirectory();
+        appSettings.TagCloudSettings.Size = createTagCloud.GetSize();
+        appSettings.TagCloudSettings.NamePhoto = createTagCloud.NamePhoto;
+        appSettings.TagCloudSettings.EmSize = int.Parse(createTagCloud.EmSize);
+        appSettings.TagCloudSettings.ColorWords = createTagCloud.Color;
+        appSettings.TagCloudSettings.BackGround = createTagCloud.BackgrondColor;
+        appSettings.TagCloudSettings.ImageFormat = createTagCloud.GetImageFormat();
+        appSettings.TagCloudSettings.Font = createTagCloud.Font;
 
-        _appSettings.WordLoaderSettings.Path = createTagCloud.PathToWords;
-        _appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
+        appSettings.WordLoaderSettings.Path = createTagCloud.PathToWords;
+        appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
     }
 }

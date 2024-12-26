@@ -7,10 +7,7 @@ public static class PopularWordExtension
         var dict = new Dictionary<string, WordPopular>();
         foreach (var line in s)
         {
-            if (dict.TryAdd(line, new WordPopular(line, 0)))
-            {
-                yield return dict[line];
-            }
+            if (dict.TryAdd(line, new WordPopular(line, 0))) yield return dict[line];
 
             dict[line].Count++;
         }

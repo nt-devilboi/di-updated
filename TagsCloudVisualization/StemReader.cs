@@ -43,7 +43,7 @@ public class StemReader : IProcessOutputReader
     public IEnumerable<string> ReadLines()
     {
         var line = _streamReader.ReadLine();
-        while (!string.IsNullOrEmpty(line))
+        while (line != null)
         {
             yield return line;
             line = ReadLine();

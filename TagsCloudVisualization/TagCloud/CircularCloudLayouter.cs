@@ -7,33 +7,33 @@ public class CircularCloudLayouter : ICloudLayouter
 {
     private const double CoefficientRadius = 1.3;
     private const int CoefficientAngle = 14;
-    private readonly List<Rectangle> rectangles;
-    private double angle;
-    private readonly TagCloudSettings TagCloudSettings;
+    private readonly List<Rectangle> _rectangles;
+    private readonly TagCloudSettings _tagCloudSettings;
+    private double _angle;
 
     public CircularCloudLayouter(TagCloudSettings appSettings)
     {
         Validate(appSettings.Center);
-        rectangles = [];
-        TagCloudSettings = appSettings;
+        _rectangles = [];
+        _tagCloudSettings = appSettings;
     }
 
-    public Point Start => TagCloudSettings.Center;
+    public Point Start => _tagCloudSettings.Center;
 
     public Rectangle PutNextRectangle(Size rectangleSize)
     {
-        var rec = Rectangle.Empty;
+        Rectangle rec;
         do
         {
-            angle += Math.PI / CoefficientAngle;
-            var radius = CoefficientRadius * angle;
-            var x = (int)(Start.X + radius * Math.Cos(angle));
-            var y = (int)(Start.Y + radius * Math.Sin(angle));
+            _angle += Math.PI / CoefficientAngle;
+            var radius = CoefficientRadius * _angle;
+            var x = (int)(Start.X + radius * Math.Cos(_angle));
+            var y = (int)(Start.Y + radius * Math.Sin(_angle));
             rec = new Rectangle(new Point(x, y), rectangleSize);
         } while (AnyIntersectWithRec(rec));
 
-        if (rectangles.Count != 0) rec = Sealing(rec);
-        rectangles.Add(rec);
+        if (_rectangles.Count != 0) rec = Sealing(rec);
+        _rectangles.Add(rec);
         return rec;
     }
 
@@ -55,6 +55,6 @@ public class CircularCloudLayouter : ICloudLayouter
 
     private bool AnyIntersectWithRec(Rectangle rec)
     {
-        return rectangles.Any(rectangle => rectangle.IntersectsWith(rec));
+        return _rectangles.Any(rectangle => rectangle.IntersectsWith(rec));
     }
 }

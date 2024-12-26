@@ -8,11 +8,9 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
 {
     private readonly Bitmap _bitmap;
     private readonly Graphics _graphics;
+    private readonly TagCloudSettings _tagCloudSettings;
     private bool _isDisposed;
     private bool _isSave;
-    private readonly TagCloudSettings _tagCloudSettings;
-
-    private  Font GetFont(int emSize) => new(_tagCloudSettings.Font, emSize);
 
     public CloudBitMap(TagCloudSettings tagCloudSettings)
     {
@@ -22,20 +20,20 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
         _graphics.Clear(_tagCloudSettings.BackGround);
     }
 
+    public Size GetSizeWord(string word, int emSize)
+    {
+        return _graphics.MeasureString(word, GetFont(emSize)).ToSize();
+    }
+
     public Size Size()
     {
         return _bitmap.Size;
     }
-    
+
     public void DrawString(RectangleTagCloud rec)
     {
         var brush = new SolidBrush(_tagCloudSettings.ColorWords);
         _graphics.DrawString(rec.Text, GetFont(rec.EmSize), brush, rec.Rectangle);
-    }
-
-    public Size GetSizeWord(string word, int emSize)
-    {
-        return _graphics.MeasureString(word, GetFont(emSize)).ToSize();
     }
 
     public void Save()
@@ -48,7 +46,7 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
 
         var saveFilePath = string.Join("", _tagCloudSettings.PathDirectory,
             $"tagCloud-({_tagCloudSettings.NamePhoto}).{_tagCloudSettings.ImageFormat}");
-        
+
         _bitmap.Save(saveFilePath, _tagCloudSettings.ImageFormat);
         Console.WriteLine($"file saved in {saveFilePath}");
         _isSave = true;
@@ -57,6 +55,11 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
     public void Dispose()
     {
         Dispose(true);
+    }
+
+    private Font GetFont(int emSize)
+    {
+        return new Font(_tagCloudSettings.Font, emSize);
     }
 
     private void Dispose(bool fromMethod)

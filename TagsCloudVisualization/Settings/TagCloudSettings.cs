@@ -18,8 +18,8 @@ public class TagCloudSettings
     public Color ColorWords { get; set; }
 
     public Color BackGround { get; set; }
-    
+
     public ImageFormat ImageFormat { get; set; }
-    
+
     public string Font { get; set; }
 }
