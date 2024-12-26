@@ -8,34 +8,34 @@ namespace TagCloud2.Options;
 public class CreateTagCloud
 {
     [Option('w', "PathWordsFile", Required = true, HelpText = "path of file with words")]
-    public required string PathToWords { get; set; }
+    public required string PathToWords { get; init; }
 
     [Option('s', "size", Required = true, HelpText = "size of image formate WxH", Separator = 'x')]
-    public required IEnumerable<string> Size { get; set; }
+    public required IEnumerable<string> Size { private get; init; }
 
-    [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos")]
-    public required string Directory { get; set; }
+    [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos", Separator = ' ')]
+    public required IEnumerable<string> Directory { private get; init; }
 
     [Option('n', "NameFile", Required = true, HelpText = "Name of photos")]
-    public required string NamePhoto { get; set; }
+    public required string NamePhoto { get; init; }
 
     [Option('a', "StemPath", Required = true, HelpText = "stem dir")]
-    public required string StemPath { get; set; }
+    public required string StemPath { get; init; }
 
     [Option('e', "emSize", Required = true, HelpText = "Max EmSize of word")]
-    public required string EmSize { get; set; }
+    public required string EmSize { get; init; }
 
     [Option('c', "Color", Required = false, HelpText = "Color of words")]
-    public Color Color { get; set; } = Color.Black;
+    public Color Color { get; init; } = Color.Black;
 
     [Option('b', "background", Required = false, HelpText = "Color of words")]
-    public Color BackgrondColor { get; set; } = Color.White;
+    public Color BackgrondColor { get; init; } = Color.White;
 
     [Option('f', "format", Required = false, HelpText = "Format of Photo")]
-    public string ImageFormatString { get; set; } = "png";
+    public string ImageFormatString { private get; init; } = "png";
 
     [Option('t', "typeFace", Required = false, HelpText = "font of words")]
-    public string Font { get; set; } = "arial";
+    public string Font { get; init; } = "arial";
 
     public ImageFormat GetImageFormat()
     {
@@ -52,5 +52,10 @@ public class CreateTagCloud
     {
         var size = Size.ToArray();
         return new Size(int.Parse(size[0]), int.Parse(size[1]));
+    }
+
+    public string GetDirectory()
+    {
+        return string.Join(' ', Directory);
     }
 }

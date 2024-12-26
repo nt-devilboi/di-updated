@@ -54,7 +54,7 @@ public class TagCloudCli : ITagCloudController
 
     private void SetParameters(CreateTagCloud createTagCloud)
     {
-        _appSettings.TagCloudSettings.PathDirectory = createTagCloud.Directory;
+        _appSettings.TagCloudSettings.PathDirectory = createTagCloud.GetDirectory();
         _appSettings.TagCloudSettings.Size = createTagCloud.GetSize();
         _appSettings.TagCloudSettings.NamePhoto = createTagCloud.NamePhoto;
         _appSettings.TagCloudSettings.EmSize = int.Parse(createTagCloud.EmSize);
