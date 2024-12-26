@@ -2,7 +2,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using FluentAssertions;
 using TagsCloudVisualization;
-using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisuliazation.Test;
@@ -29,6 +28,8 @@ public class FullWorkTests
             Path = "./../../../text.txt",
             PathStem = "./../../../mystem.exe"
         };
+        
+        
         var wordList = WeCantSpell.Hunspell.WordList.CreateFromFiles("./../../../ru_RU.dic");
         var wordLoader = new FileWordLoader(wordList,
             new Lazy<IProcessOutputReader>(() => new StemReader(loadWordSettings)));

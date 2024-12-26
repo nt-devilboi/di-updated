@@ -1,4 +1,3 @@
-using System.Drawing;
 using CommandLine;
 using TagCloud2.Options;
 using TagsCloudVisualization;
@@ -47,10 +46,7 @@ public class TagCloudCli : ITagCloudController
         }
 
         var image = _tagCloud.GenerateCloud(BitMapImage.Value, (ISizeWord)BitMapImage.Value);
-        if (!image.IsSuccess)
-        {
-            Console.WriteLine(image.Error);
-        }
+        if (!image.IsSuccess) Console.WriteLine(image.Error);
 
         image.Value.Save();
 
