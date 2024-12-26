@@ -1,3 +1,7 @@
 namespace TagsCloudVisualization;
 
-public record WordPopular(string Word, int Count);
+public class WordPopular(string word, int count)
+{
+    public string Word { get; set; } = word;
+    public int Count { get; set; } = count;
+}

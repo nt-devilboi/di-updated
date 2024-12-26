@@ -39,9 +39,14 @@ public class StemReader : IProcessOutputReader
     {
         return _streamReader.ReadLine();
     }
-}
 
-public interface IProcessOutputReader : IDisposable
-{
-    public string ReadLine();
+    public IEnumerable<string> ReadLines()
+    {
+        var line = _streamReader.ReadLine();
+        while (!string.IsNullOrEmpty(line))
+        {
+            yield return line;
+            line = ReadLine();
+        }
+    }
 }
