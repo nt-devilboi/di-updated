@@ -36,16 +36,15 @@ public class TagCloudCli : ITagCloudController
     private IEnumerable<Error> CreateCloud(CreateTagCloud createTagCloud)
     {
         SetParameters(createTagCloud);
-
-        // todo: проверить, что можно много облаков делать и все корректо
-        var BitMapImage = _factoryCloudBitMap.Create();
-        if (!BitMapImage.IsSuccess)
+        
+        var bitMapImage = _factoryCloudBitMap.Create();
+        if (!bitMapImage.IsSuccess)
         {
-            Console.WriteLine(BitMapImage.Error);
+            Console.WriteLine(bitMapImage.Error);
             return new List<Error>();
         }
 
-        var image = _tagCloud.GenerateCloud(BitMapImage.Value, (ISizeWord)BitMapImage.Value);
+        var image = _tagCloud.GenerateCloud(bitMapImage.Value, (ISizeWord)bitMapImage.Value);
         if (!image.IsSuccess) Console.WriteLine(image.Error);
 
         image.Value.Save();
