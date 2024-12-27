@@ -44,8 +44,8 @@ public class TagCloudTests
             PathDirectory = PathDir,
             NamePhoto = NameFile
         };
-        var AbstractFac = new FactoryCloudBitMap(_settings);
-        var result = AbstractFac.Create();
+        var abstractFac = new FactoryBitMap(_settings);
+        var result = abstractFac.Create();
         result.Error.Should().Be("size of image should be with positive number");
     }
 

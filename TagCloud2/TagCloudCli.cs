@@ -6,7 +6,7 @@ using TagsCloudVisualization.Settings;
 
 namespace TagCloud2;
 
-public class TagCloudCli(TagCloud tagCloud, AppSettings appSettings, FactoryCloudBitMap factoryCloudBitMap)
+public class TagCloudCli(TagCloud tagCloud, AppSettings appSettings, AbstractFactoryBitMap factoryCloudBitMap)
     : ITagCloudController
 {
     public void Run()

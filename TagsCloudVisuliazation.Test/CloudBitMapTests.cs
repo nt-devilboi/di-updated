@@ -19,7 +19,7 @@ public class CloudBitMapTests
             NamePhoto = "notIntersect-50.png"
         };
 
-        var fac = new FactoryCloudBitMap(settings);
+        var fac = new FactoryBitMap(settings);
 
         fac.Create().Error.Should().Be($"This Directory Not Exists  {settings.PathDirectory}");
     }

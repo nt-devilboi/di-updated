@@ -3,6 +3,7 @@
 using SimpleInjector;
 using TagCloud2;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
 using WeCantSpell.Hunspell;
 
@@ -19,7 +20,7 @@ serviceCollection.Register<WordLoaderSettings>(Lifestyle.Singleton);
 
 serviceCollection.Register<ITagCloudController, TagCloudCli>(Lifestyle.Singleton);
 
-serviceCollection.Register<FactoryCloudBitMap>(Lifestyle.Singleton);
+serviceCollection.Register<AbstractFactoryBitMap,FactoryBitMap>(Lifestyle.Singleton);
 serviceCollection.Register(() =>
     new Lazy<IProcessOutputReader>(() =>
         new StemReader(serviceCollection.GetInstance<WordLoaderSettings>())), Lifestyle.Singleton);

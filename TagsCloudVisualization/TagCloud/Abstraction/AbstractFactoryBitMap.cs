@@ -1,23 +1,24 @@
-using TagsCloudVisualization.Result;
 using TagsCloudVisualization.Settings;
 
-namespace TagsCloudVisualization;
+namespace TagsCloudVisualization.Abstraction;
 
-public class FactoryCloudBitMap(TagCloudSettings cloudSettings)
+public abstract class AbstractFactoryBitMap(TagCloudSettings cloudSettings)
 {
-    public Result<ITagCloudImage> Create()
+    protected abstract ITagCloudImage CreateBitMap(TagCloudSettings tagCloudSettings);
+
+    public Results<ITagCloudImage> Create()
     {
         var result = Validate(cloudSettings.Size.Width, cloudSettings.Size.Height, cloudSettings.PathDirectory,
             cloudSettings.NamePhoto);
-        if (!result.IsSuccess) return new Result<ITagCloudImage>(result.Error);
+        if (!result.IsSuccess) return new Results<ITagCloudImage>(result.Error);
 
-        return new CloudBitMap(cloudSettings).AsResult<ITagCloudImage>();
+        return CreateBitMap(cloudSettings).AsResult();
     }
 
-    private static Result<None> Validate(int width, int height, string path,
+    private static Results<None> Validate(int width, int height, string path,
         string fileName)
     {
-        return Result.Result
+        return Results
             .StartCheck(Directory.Exists(path),
                 $"This Directory Not Exists  {path}")
             .AndCheck(width > 0 && height > 0,

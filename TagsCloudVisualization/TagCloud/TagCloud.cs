@@ -1,25 +1,24 @@
 using TagsCloudVisualization.Abstraction;
-using TagsCloudVisualization.Result;
 using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
 public class TagCloud(ICloudLayouter cloudLayouter, IWordLoader wordLoader, TagCloudSettings tagCloudSettings)
 {
-    private static Result<None> Validate(ICloudLayouter cloudLayouter, ITagCloudImage tagCloudImage)
+    private static Results<None> Validate(ICloudLayouter cloudLayouter, ITagCloudImage tagCloudImage)
     {
-        return Result.Result.StartCheck(cloudLayouter.Start.Y <= tagCloudImage.Size().Height &&
+        return Results.StartCheck(cloudLayouter.Start.Y <= tagCloudImage.Size().Height &&
                                         cloudLayouter.Start.X <= tagCloudImage.Size().Width,
             "the start position is abroad of image");
     }
 
-    public Result<ITagCloudImage> GenerateCloud(ITagCloudImage tagCloudImage, ISizeWord sizeWord)
+    public Results<ITagCloudImage> GenerateCloud(ITagCloudImage tagCloudImage, ISizeWord sizeWord)
     {
         var result = Validate(cloudLayouter, tagCloudImage);
-        if (!result.IsSuccess) return Result.Result.Fail<ITagCloudImage>(result.Error);
+        if (!result.IsSuccess) return Results.Fail<ITagCloudImage>(result.Error);
 
         var wordPopular = wordLoader.LoadWord();
-        if (wordPopular.Length == 0) return Result.Result.Fail<ITagCloudImage>("Words in Text Zero");
+        if (wordPopular.Length == 0) return Results.Fail<ITagCloudImage>("Words in Text Zero");
 
 
         var emSize = tagCloudSettings.EmSize;
