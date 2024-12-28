@@ -31,7 +31,7 @@ public struct Result<T>
 
     public bool IsSuccess => Error == null;
 
-    
+
 }
 
 public static class Result

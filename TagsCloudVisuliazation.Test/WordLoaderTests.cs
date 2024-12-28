@@ -1,67 +1,63 @@
 using FakeItEasy;
 using FluentAssertions;
 using TagsCloudVisualization;
-using WeCantSpell.Hunspell;
+using TagsCloudVisualization.Abstraction;
+using TagsCloudVisualization.Result;
 
 namespace TagsCloudVisuliazation.Test;
 
 public class WordLoaderTests
 {
+    private FileWordLoader _fileWordLoader;
+    private IStemReader _fakeStemReader;
+
+    [SetUp]
+    public void SetUp()
+    {
+        var fakeReader = A.Fake<IStemReader>();
+        var fakeFactory = A.Fake<FactoryStem>();
+        A.CallTo(() => fakeFactory.Create()).Returns(fakeReader.AsResult());
+        _fakeStemReader = fakeReader;
+        _fileWordLoader = new FileWordLoader(fakeFactory);
+    }
+
     [Test]
     public void WordLoader_LoadWord()
     {
-        var fakeReader = A.Fake<IProcessOutputReader>();
-        var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
+        A.CallTo(() => _fakeStemReader.ReadLines()).Returns(["hello", "hello"]);
 
-        A.CallTo(() => steamReader.Value.ReadLines()).Returns(["hello", "hello"]);
-        
-        var wordLoader = new FileWordLoader(steamReader);
-        var words = wordLoader.LoadWord();
+
+        var words = _fileWordLoader.LoadWord();
 
         words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
     }
-    
+
     [Test]
     public void WordLoader_WordNotInDic()
     {
-        var fakeReader = A.Fake<IProcessOutputReader>();
-        var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
+        A.CallTo(() => _fakeStemReader.ReadLines()).Returns([]);
 
-        A.CallTo(() => steamReader.Value.ReadLines()).Returns([]);
-        
-        var wordLoader = new FileWordLoader(steamReader);
-        var words = wordLoader.LoadWord();
-
+        var words = _fileWordLoader.LoadWord();
         words.Should().BeEmpty();
     }
-    
+
     [Test]
     public void WordLoader_WordInLowerCase()
     {
-        var fakeReader = A.Fake<IProcessOutputReader>();
-        var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
+        A.CallTo(() => _fakeStemReader.ReadLines()).ReturnsNextFromSequence(["HELLO", "hello"]);
 
-        A.CallTo(() => steamReader.Value.ReadLines()).ReturnsNextFromSequence(["HELLO", "hello"]);
-        
-        var wordLoader = new FileWordLoader(steamReader);
-        var words = wordLoader.LoadWord();
+        var words = _fileWordLoader.LoadWord();
 
         words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
     }
-    
+
     [Test]
     public void WordLoader_CheckWithTwoWord()
     {
-        var fakeReader = A.Fake<IProcessOutputReader>();
-        var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
-
-        A.CallTo(() => steamReader.Value.ReadLines()).Returns(["hello", "hello", "andrey"]);
-        
-        var wordLoader = new FileWordLoader(steamReader);
-        var words = wordLoader.LoadWord();
+        A.CallTo(() => _fakeStemReader.ReadLines()).Returns(["hello", "hello", "andrey"]);
+        var words = _fileWordLoader.LoadWord();
 
         words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
         words[1].Should().BeEquivalentTo(new WordPopular("andrey", 1));
     }
-   
 }

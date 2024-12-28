@@ -3,6 +3,7 @@ using FluentAssertions;
 using TagCloud2;
 using TagCloud2.Abstract;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisuliazation.Test;
@@ -17,9 +18,7 @@ public class FullWorkTests
     {
         var tagCloudSettings = new TagCloudSettings();
         var loadWordSettings = new WordLoaderSettings();
-
-        var wordLoader = new FileWordLoader(
-            new Lazy<IProcessOutputReader>(() => new StemReader(loadWordSettings)));
+        var wordLoader = new FileWordLoader(new FactoryStem(loadWordSettings));
         var cloudLayouter = new CircularCloudLayouter(tagCloudSettings);
 
         var tagCloud = new TagCloud(cloudLayouter, wordLoader, tagCloudSettings, new MeasureString(tagCloudSettings));

@@ -1,15 +1,16 @@
 using System.Collections.Immutable;
+using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Extensions;
 
 namespace TagsCloudVisualization;
 
 public class FileWordLoader(
-    Lazy<IProcessOutputReader> steamReader)
+    FactoryStem steamReader)
     : IWordLoader
 {
     public ImmutableArray<WordPopular> LoadWord()
     {
-        return Sort(steamReader.Value.ReadLines()
+        return Sort(steamReader.Create().GetValueOrThrow().ReadLines()
             .Where(ValidateLexeme)
             .Select(GetLemma)
             .ToWordPopular()

@@ -7,7 +7,6 @@ using Tagloud2.Abstract;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
-using WeCantSpell.Hunspell;
 
 var serviceCollection = new Container();
 
@@ -25,9 +24,7 @@ serviceCollection.Register<IInputData, InputData>(Lifestyle.Singleton);
 serviceCollection.Register<ISizeWord, MeasureString>(Lifestyle.Singleton);
 serviceCollection.Register<ILogger, ConsoleLogger>(Lifestyle.Singleton);
 serviceCollection.Register<AbstractFactoryBitMap, FactoryBitMap>(Lifestyle.Singleton);
-serviceCollection.Register(() =>
-    new Lazy<IProcessOutputReader>(() =>
-        new StemReader(serviceCollection.GetInstance<WordLoaderSettings>())), Lifestyle.Singleton);
+serviceCollection.Register<FactoryStem>(Lifestyle.Singleton);
 var application = serviceCollection.GetInstance<ITagCloudController>();
 
 application.Run();

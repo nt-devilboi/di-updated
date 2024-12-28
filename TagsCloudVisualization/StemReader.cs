@@ -4,7 +4,7 @@ using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
-public class StemReader : IProcessOutputReader
+public class StemReader : IStemReader
 {
     private readonly Process _process;
     private readonly StreamReader _streamReader;
@@ -16,7 +16,7 @@ public class StemReader : IProcessOutputReader
             StartInfo =
             {
                 FileName = wordLoaderSettings.PathStem,
-                Arguments = $"-nli {wordLoaderSettings.Path}",
+                Arguments = $"-nli {wordLoaderSettings.PathTextFile}",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,

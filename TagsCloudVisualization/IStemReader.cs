@@ -1,6 +1,6 @@
 namespace TagsCloudVisualization;
 
-public interface IProcessOutputReader : IDisposable
+public interface IStemReader : IDisposable
 {
     public string ReadLine();
 

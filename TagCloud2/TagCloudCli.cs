@@ -60,7 +60,7 @@ public class TagCloudCli(
         appSettings.TagCloudSettings.ImageFormat = createTagCloud.GetImageFormat();
         appSettings.TagCloudSettings.Font = createTagCloud.Font;
 
-        appSettings.WordLoaderSettings.Path = createTagCloud.PathToWords;
+        appSettings.WordLoaderSettings.PathTextFile = createTagCloud.PathToWords;
         appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
 
         return Result.Ok();
