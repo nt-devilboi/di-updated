@@ -2,6 +2,8 @@
 
 using SimpleInjector;
 using TagCloud2;
+using TagCloud2.Abstract;
+using Tagloud2.Abstract;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
@@ -19,12 +21,13 @@ serviceCollection.Register<TagCloudSettings>(Lifestyle.Singleton);
 serviceCollection.Register<WordLoaderSettings>(Lifestyle.Singleton);
 
 serviceCollection.Register<ITagCloudController, TagCloudCli>(Lifestyle.Singleton);
-
-serviceCollection.Register<AbstractFactoryBitMap,FactoryBitMap>(Lifestyle.Singleton);
+serviceCollection.Register<IInputData, InputData>(Lifestyle.Singleton);
+serviceCollection.Register<ISizeWord, MeasureString>(Lifestyle.Singleton);
+serviceCollection.Register<ILogger, ConsoleLogger>(Lifestyle.Singleton);
+serviceCollection.Register<AbstractFactoryBitMap, FactoryBitMap>(Lifestyle.Singleton);
 serviceCollection.Register(() =>
     new Lazy<IProcessOutputReader>(() =>
         new StemReader(serviceCollection.GetInstance<WordLoaderSettings>())), Lifestyle.Singleton);
-
 serviceCollection.Register(() => WordList.CreateFromFiles("./../../../ru_RU.dic"), Lifestyle.Singleton);
 var application = serviceCollection.GetInstance<ITagCloudController>();
 
