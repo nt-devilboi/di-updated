@@ -1,29 +1,33 @@
 using System.Collections.Immutable;
 using TagsCloudVisualization.Extensions;
-using WeCantSpell.Hunspell;
 
 namespace TagsCloudVisualization;
 
 public class FileWordLoader(
-    WordList wordList,
     Lazy<IProcessOutputReader> steamReader)
     : IWordLoader
 {
     public ImmutableArray<WordPopular> LoadWord()
     {
-        var reader = steamReader.Value;
-        var result = GetCorrectWord(reader).ToList();
-        result.Sort((prev, cur) => cur.Count.CompareTo(prev.Count));
-        return [..result];
+        return Sort(steamReader.Value.ReadLines()
+            .Where(ValidateLexeme)
+            .Select(GetLemma)
+            .ToWordPopular()
+            .ToList());
     }
-
-    private IEnumerable<WordPopular> GetCorrectWord(IProcessOutputReader reader)
+    
+    private ImmutableArray<WordPopular> Sort(List<WordPopular> list)
     {
-        return reader.ReadLines().Where(x => !string.IsNullOrEmpty(x) && !IsBoring(x))
-            .Select(GetWord).Where(wordList.Check).ToWordPopular();
+        list.Sort((prev, cur) => cur.Count.CompareTo(prev.Count));
+        return [..list];
     }
 
-    private static string GetWord(string l)
+    private static bool ValidateLexeme(string x)
+    {
+        return !string.IsNullOrEmpty(x) && !IsBoring(x);
+    }
+
+    private static string GetLemma(string l)
     {
         return l.Split('=').First().ToLower();
     }

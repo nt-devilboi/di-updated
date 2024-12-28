@@ -1,11 +1,10 @@
 using System.Text;
-using TagCloud2;
 using TagCloud2.Abstract;
 using static System.String;
 
 namespace TagsCloudVisuliazation.Test;
 
-public class TestsLogger : ILogger
+public class Logger : ILogger
 {
     private readonly StringBuilder _logger = new();
 

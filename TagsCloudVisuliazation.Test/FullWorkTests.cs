@@ -1,5 +1,4 @@
-using System.Drawing;
-using System.Drawing.Imaging;
+using FakeItEasy;
 using FluentAssertions;
 using TagCloud2;
 using TagCloud2.Abstract;
@@ -10,87 +9,62 @@ namespace TagsCloudVisuliazation.Test;
 
 public class FullWorkTests
 {
-    [Test]
-    public void TagCloud_CreateCloud()
+    private TagCloudCli _tagCloudCli;
+    private IInputData _inputData;
+    private Logger _logger;
+    [SetUp]
+    public void SetUp()
     {
-        var tagCloudSettings = new TagCloudSettings()
-        {
-            Size = new Size(1920, 1680),
-            EmSize = 50,
-            NamePhoto = "TestCreateCloud",
-            PathDirectory = "./../../../photos/",
-            Font = "arial",
-            ImageFormat = ImageFormat.Png,
-            BackGround = Color.White,
-            ColorWords = Color.Black
-        };
+        var tagCloudSettings = new TagCloudSettings();
+        var loadWordSettings = new WordLoaderSettings();
 
-        var loadWordSettings = new WordLoaderSettings()
-        {
-            Path = "./../../../text.txt",
-            PathStem = "./../../../mystem.exe"
-        };
-
-
-        var wordList = WeCantSpell.Hunspell.WordList.CreateFromFiles("./../../../ru_RU.dic");
-        var wordLoader = new FileWordLoader(wordList,
+        var wordLoader = new FileWordLoader(
             new Lazy<IProcessOutputReader>(() => new StemReader(loadWordSettings)));
         var cloudLayouter = new CircularCloudLayouter(tagCloudSettings);
 
-        var tagCloud = new TagCloud(cloudLayouter, wordLoader, tagCloudSettings);
-        var image = new CloudBitMap(tagCloudSettings);
-
-
-        var completedImage = tagCloud.GenerateCloud(image, image);
-
-        completedImage.GetValueOrThrow().Save();
-
-
-        File.Exists("./../../../photos/tagCloud-(TestCreateCloud).png").Should().BeTrue();
-        File.Delete("./../../../photos/tagCloud-(TestCreateCloud).png");
-    }
-
-
-    [Test]
-    public void TagCloud_CliTest()
-    {
-        var tagCloudSettings = new TagCloudSettings()
-        {
-            Size = new Size(1920, 1680),
-            EmSize = 50,
-            NamePhoto = "TestCreateCloud",
-            PathDirectory = "./../../../photos/",
-            Font = "arial",
-            ImageFormat = ImageFormat.Png,
-            BackGround = Color.White,
-            ColorWords = Color.Black
-        };
-
-        var loadWordSettings = new WordLoaderSettings()
-        {
-            Path = "./../../../text.txt",
-            PathStem = "./../../../mystem.exe"
-        };
-
-
-        var wordList = WeCantSpell.Hunspell.WordList.CreateFromFiles("./../../../ru_RU.dic");
-        var wordLoader = new FileWordLoader(wordList,
-            new Lazy<IProcessOutputReader>(() => new StemReader(loadWordSettings)));
-        var cloudLayouter = new CircularCloudLayouter(tagCloudSettings);
-
-        var tagCloud = new TagCloud(cloudLayouter, wordLoader, tagCloudSettings);
+        var tagCloud = new TagCloud(cloudLayouter, wordLoader, tagCloudSettings, new MeasureString(tagCloudSettings));
         var factory = new FactoryBitMap(tagCloudSettings);
-        var logger = new TestsLogger();
-        var cli = new TagCloudCli(tagCloud, new AppSettings(tagCloudSettings, loadWordSettings), factory, logger);
+        _logger = new Logger();
 
-        using (resource)
-        {
-            
-        }
-        cli.Run();
-
-        logger.GetData().Should().BeEmpty();
-        File.Exists("./../../../photos/tagCloud-(TestCreateCloud).png").Should().BeTrue();
-        File.Delete("./../../../photos/tagCloud-(TestCreateCloud).png");
+        _inputData = A.Fake<IInputData>();
+        _tagCloudCli = new TagCloudCli(tagCloud,
+            new AppSettings(tagCloudSettings, loadWordSettings),
+            factory,
+            _logger,
+            _inputData);
     }
+
+    [Test]
+    public void TagCloudCli_WorkCorrect()
+    {
+        SetLineForReadLine("create -s 1920x1680 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+        
+        _tagCloudCli.Run();
+
+        _logger.GetData().Should().BeEmpty();
+        File.Exists("./../../../photos/tagCloud-(TestCli).Bmp").Should().BeTrue();
+        File.Delete("./../../../photos/tagCloud-(TestCli).Bmp");
+    }
+    
+    
+    [Test]
+    public void TagCloudCli_SizeImage_ShouldBeMoreThanZero()
+    {
+        SetLineForReadLine("create -s 0x0 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+        
+        _tagCloudCli.Run();
+
+        _logger.GetData().Should().Be("size of image should be with positive number, now: {Width=0, Height=0}\r\n");
+        File.Exists("./../../../photos/tagCloud-(TestCli).Bmp").Should().BeFalse();
+    }
+
+    private void SetLineForReadLine(string line)
+    {
+        A.CallTo(() => _inputData.ReadArgs())
+            .Returns(line.Split());
+    }
+    
+    
+   
+    
 }

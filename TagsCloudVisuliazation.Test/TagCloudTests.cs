@@ -38,6 +38,7 @@ public class TagCloudTests
     [Test]
     public void TagCloud_StartPosition_ShouldBe_In_Image()
     {
+        var size = new Size(-3, -2);
         _settings = new TagCloudSettings()
         {
             Size = new Size(-3, -2),
@@ -46,7 +47,7 @@ public class TagCloudTests
         };
         var abstractFac = new FactoryBitMap(_settings);
         var result = abstractFac.Create();
-        result.Error.Should().Be("size of image should be with positive number");
+        result.Error.Should().Be($"size of image should be with positive number, now: {size}");
     }
 
     [TearDown]

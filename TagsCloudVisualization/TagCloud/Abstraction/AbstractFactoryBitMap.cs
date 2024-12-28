@@ -22,7 +22,7 @@ public abstract class AbstractFactoryBitMap(TagCloudSettings cloudSettings)
 
     private Result<TagCloudSettings> ValidateSizeImage(TagCloudSettings tagCloudSettings) =>
         Validate(tagCloudSettings, t => t.Size is { Width: > 0, Height: > 0 },
-            t => $"size of image should be with positive number now: {t.Size}");
+            t => $"size of image should be with positive number, now: {t.Size}");
 
     private Result<TagCloudSettings> ValidatePathNamed(TagCloudSettings tagCloudSettings)
         => Validate(tagCloudSettings, t => t.PathDirectory.EndsWith('/'),

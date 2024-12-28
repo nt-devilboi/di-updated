@@ -14,7 +14,7 @@ public class CreateTagCloud
     public required IEnumerable<string> Size { private get; init; }
 
     [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos", Separator = ' ')]
-    public required string Directory { private get; init; }
+    public required IEnumerable<string> Directory { private get; init; }
 
     [Option('n', "NameFile", Required = true, HelpText = "Name of photos")]
     public required string NamePhoto { get; init; }

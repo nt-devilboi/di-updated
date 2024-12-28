@@ -28,7 +28,6 @@ serviceCollection.Register<AbstractFactoryBitMap, FactoryBitMap>(Lifestyle.Singl
 serviceCollection.Register(() =>
     new Lazy<IProcessOutputReader>(() =>
         new StemReader(serviceCollection.GetInstance<WordLoaderSettings>())), Lifestyle.Singleton);
-serviceCollection.Register(() => WordList.CreateFromFiles("./../../../ru_RU.dic"), Lifestyle.Singleton);
 var application = serviceCollection.GetInstance<ITagCloudController>();
 
 application.Run();
