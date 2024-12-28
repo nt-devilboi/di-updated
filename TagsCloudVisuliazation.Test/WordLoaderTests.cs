@@ -14,19 +14,19 @@ public class WordLoaderTests
     [SetUp]
     public void SetUp()
     {
-        var fakeReader = A.Fake<IStemReader>();
         var fakeFactory = A.Fake<FactoryStem>();
-        A.CallTo(() => fakeFactory.Create()).Returns(fakeReader.AsResult());
-        _fakeStemReader = fakeReader;
+        _fakeStemReader = A.Fake<IStemReader>();
         _fileWordLoader = new FileWordLoader(fakeFactory);
+
+        A.CallTo(() => fakeFactory.Create()).Returns(_fakeStemReader.AsResult());
+        
     }
 
     [Test]
     public void WordLoader_LoadWord()
     {
         A.CallTo(() => _fakeStemReader.ReadLines()).Returns(["hello", "hello"]);
-
-
+        
         var words = _fileWordLoader.LoadWord();
 
         words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
@@ -59,5 +59,24 @@ public class WordLoaderTests
 
         words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
         words[1].Should().BeEquivalentTo(new WordPopular("andrey", 1));
+    }
+    
+    [Test]
+    public void WordLoader_ShouldSkipBoringWord()
+    {
+        A.CallTo(() => _fakeStemReader.ReadLines()).Returns(["на=PR=|на=PART=", 
+            "и=CONJ=|и=INTJ=|и=S",
+            "hello",
+            "andrey", "от=PR="]);
+        var words = _fileWordLoader.LoadWord();
+
+        words[0].Should().BeEquivalentTo(new WordPopular("hello", 1));
+        words[1].Should().BeEquivalentTo(new WordPopular("andrey", 1));
+    }
+
+    [TearDown]
+    public void Dispose()
+    {
+        _fakeStemReader.Dispose();
     }
 }

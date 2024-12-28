@@ -10,11 +10,12 @@ public class Logger : ILogger
 
     public void WriteLine(string line)
     {
-        _logger.AppendLine(line);
+        _logger.Append(line);
     }
 
-    public string GetData()
+    public string[] GetData()
     {
-        return Join("", _logger);
+        if (_logger.Length == 0) return [];
+        return _logger.ToString().Split('`');
     }
 }

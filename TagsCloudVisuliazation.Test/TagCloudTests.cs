@@ -47,7 +47,7 @@ public class TagCloudTests
         };
         var abstractFac = new FactoryBitMap(_settings);
         var result = abstractFac.Create();
-        result.Error.Should().Be($"size of image should be with positive number, now: {size}");
+        result.Error.Should().Be(Errors.Image.SizeLessThanZero(size));
     }
 
     [TearDown]

@@ -1,3 +1,4 @@
+using System.Drawing;
 using FakeItEasy;
 using FluentAssertions;
 using TagCloud2;
@@ -13,6 +14,7 @@ public class FullWorkTests
     private TagCloudCli _tagCloudCli;
     private IInputData _inputData;
     private Logger _logger;
+
     [SetUp]
     public void SetUp()
     {
@@ -36,24 +38,26 @@ public class FullWorkTests
     [Test]
     public void TagCloudCli_WorkCorrect()
     {
-        SetLineForReadLine("create -s 1920x1680 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
-        
+        SetLineForReadLine(
+            "create -s 1920x1680 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+
         _tagCloudCli.Run();
 
         _logger.GetData().Should().BeEmpty();
         File.Exists("./../../../photos/tagCloud-(TestCli).Bmp").Should().BeTrue();
         File.Delete("./../../../photos/tagCloud-(TestCli).Bmp");
     }
-    
-    
+
+
     [Test]
     public void TagCloudCli_SizeImage_ShouldBeMoreThanZero()
     {
-        SetLineForReadLine("create -s 0x0 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
-        
+        SetLineForReadLine(
+            "create -s 0x0 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+
         _tagCloudCli.Run();
 
-        _logger.GetData().Should().Be("size of image should be with positive number, now: {Width=0, Height=0}\r\n");
+        _logger.GetData()[0].Should().Be(Errors.Image.SizeLessThanZero(new Size(0, 0)));
         File.Exists("./../../../photos/tagCloud-(TestCli).Bmp").Should().BeFalse();
     }
 
@@ -62,8 +66,4 @@ public class FullWorkTests
         A.CallTo(() => _inputData.ReadArgs())
             .Returns(line.Split());
     }
-    
-    
-   
-    
 }
