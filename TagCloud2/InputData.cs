@@ -4,5 +4,5 @@ namespace TagCloud2;
 
 public class InputData(string[] args) : IInputData
 {
-    public string[] ReadArgs() => args;
+    public string[] GetArgs() => args;
 }

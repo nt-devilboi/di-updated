@@ -19,7 +19,7 @@ public class TagCloudCli(
 {
     public void Run()
     {
-        Parser.Default.ParseArguments<CreateTagCloud>(inputData.ReadArgs())
+        Parser.Default.ParseArguments<CreateTagCloud>(inputData.GetArgs())
             .WithParsed(CreateCloud)
             .WithNotParsed(HanderError);
     }

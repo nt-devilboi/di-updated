@@ -63,7 +63,7 @@ public class FullWorkTests
 
     private void SetLineForReadLine(string line)
     {
-        A.CallTo(() => _inputData.ReadArgs())
+        A.CallTo(() => _inputData.GetArgs())
             .Returns(line.Split());
     }
 }
