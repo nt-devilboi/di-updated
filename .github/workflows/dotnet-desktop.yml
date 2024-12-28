@@ -1,10 +1,10 @@
 name: .NET
 
-on:
+on: 
   push:
-    branches: [ "master" ]
+    branches: ["master", "Result-features"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build-and-tests:
@@ -13,11 +13,13 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
-      with:
+      with: 
         dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore ./Testing/Testing.sln
+    - name: restore dependencies
+      run: dotnet restore ./di.sln
     - name: Build
-      run: dotnet build --no-restore ./Testing/Testing.sln
-    - name: Unit Test
-      run: dotnet test --no-build --verbosity normal ./Testing/Testing.sln
+      run: dotnet build --no-restore ./di.sln
+    - name: UnitTests
+      run: dotnet test --no-build -- verbosity ./TagsCloudVisuliazation.Test/TagsCloudVisuliazation.Test.csproj
+  
+    
