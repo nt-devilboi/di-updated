@@ -20,7 +20,7 @@ serviceCollection.Register<TagCloudSettings>(Lifestyle.Singleton);
 serviceCollection.Register<WordLoaderSettings>(Lifestyle.Singleton);
 
 serviceCollection.Register<ITagCloudController, TagCloudCli>(Lifestyle.Singleton);
-serviceCollection.Register<IInputData, InputData>(Lifestyle.Singleton);
+serviceCollection.Register<IInputData>(() => new InputData(args), Lifestyle.Singleton);
 serviceCollection.Register<ISizeWord, MeasureString>(Lifestyle.Singleton);
 serviceCollection.Register<ILogger, ConsoleLogger>(Lifestyle.Singleton);
 serviceCollection.Register<AbstractFactoryBitMap, FactoryBitMap>(Lifestyle.Singleton);
