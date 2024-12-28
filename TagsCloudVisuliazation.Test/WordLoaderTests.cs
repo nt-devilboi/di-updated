@@ -13,12 +13,12 @@ public class WordLoaderTests
         var fakeReader = A.Fake<IProcessOutputReader>();
         var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
 
-        A.CallTo(() => steamReader.Value.ReadLine()).ReturnsNextFromSequence("hello", "hello");
+        A.CallTo(() => steamReader.Value.ReadLines()).Returns(["hello", "hello"]);
         
         var wordLoader = new FileWordLoader(steamReader);
         var words = wordLoader.LoadWord();
 
-        words[0].Should().Be(new WordPopular("hello", 2));
+        words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
     }
     
     [Test]
@@ -27,7 +27,7 @@ public class WordLoaderTests
         var fakeReader = A.Fake<IProcessOutputReader>();
         var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
 
-        A.CallTo(() => steamReader.Value.ReadLine()).ReturnsNextFromSequence("hello", "hello");
+        A.CallTo(() => steamReader.Value.ReadLines()).Returns([]);
         
         var wordLoader = new FileWordLoader(steamReader);
         var words = wordLoader.LoadWord();
@@ -41,12 +41,12 @@ public class WordLoaderTests
         var fakeReader = A.Fake<IProcessOutputReader>();
         var steamReader = new Lazy<IProcessOutputReader>(() => fakeReader);
 
-        A.CallTo(() => steamReader.Value.ReadLine()).ReturnsNextFromSequence("HELLO", "hello");
+        A.CallTo(() => steamReader.Value.ReadLines()).ReturnsNextFromSequence(["HELLO", "hello"]);
         
         var wordLoader = new FileWordLoader(steamReader);
         var words = wordLoader.LoadWord();
 
-        words[0].Should().Be(new WordPopular("hello", 2));
+        words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
     }
     
     [Test]

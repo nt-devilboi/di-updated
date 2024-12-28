@@ -45,7 +45,7 @@ public class StemReader : IProcessOutputReader
         var line = _streamReader.ReadLine();
         while (line != null)
         {
-            yield return line;
+            yield return line.ToLower();
             line = ReadLine();
         }
     }
