@@ -5,6 +5,7 @@ using CommandLine;
 namespace TagCloud2.Options;
 
 [Verb("create")]
+
 public class CreateTagCloud
 {
     [Option('w', "PathWordsFile", Required = true, HelpText = "path of file with words")]
@@ -13,7 +14,7 @@ public class CreateTagCloud
     [Option('s', "size", Required = true, HelpText = "size of image formate WxH", Separator = 'x')]
     public required IEnumerable<string> Size { private get; init; }
 
-    [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos", Separator = ' ')]
+    [Option('d', "pathDirectory", Required = true, HelpText = "path of directory for photos", Group = "path")]
     public required IEnumerable<string> Directory { private get; init; }
 
     [Option('n', "NameFile", Required = true, HelpText = "Name of photos")]
