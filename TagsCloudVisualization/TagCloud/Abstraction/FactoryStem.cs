@@ -4,14 +4,14 @@ using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization.Abstraction;
 
-public class FactoryStem(WordLoaderSettings wordLoaderSettings)
+public sealed class FactoryStem(WordLoaderSettings wordLoaderSettings)
 {
-    private IStemReader CreateStem(WordLoaderSettings cloudSettings)
+    private static IStemReader CreateStem(WordLoaderSettings cloudSettings)
     {
         return new StemReader(cloudSettings);
     }
 
-    public virtual Result<IStemReader> Create()
+    public Result<IStemReader> Create()
     {
         return ValidatePathTextFile(wordLoaderSettings)
             .Then(ValidPathStem)
@@ -24,7 +24,13 @@ public class FactoryStem(WordLoaderSettings wordLoaderSettings)
     }
 
     private Result<WordLoaderSettings> ValidatePathTextFile(WordLoaderSettings settings)
+        => settings.Validate(x => StemExists(), x => Errors.Stem.NotFoundInEnvVar());
+
+
+    private static bool StemExists()
     {
-        return settings.Validate(x => File.Exists(x.PathStem), x => $"this not stem {x}");
+        return Environment.GetEnvironmentVariable("Path")!
+            .Split(";")
+            .Any(x => File.Exists(Path.Combine(x, "mystem.exe")));
     }
 }

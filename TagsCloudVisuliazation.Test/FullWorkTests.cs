@@ -3,6 +3,7 @@ using FakeItEasy;
 using FluentAssertions;
 using TagCloud2;
 using TagCloud2.Abstract;
+using TagCloud2.Infrastructure;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;

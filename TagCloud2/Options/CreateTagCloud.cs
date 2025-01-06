@@ -5,7 +5,6 @@ using CommandLine;
 namespace TagCloud2.Options;
 
 [Verb("create")]
-
 public class CreateTagCloud
 {
     [Option('w', "PathWordsFile", Required = true, HelpText = "path of file with words")]

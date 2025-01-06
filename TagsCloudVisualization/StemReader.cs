@@ -15,7 +15,7 @@ public class StemReader : IStemReader
         {
             StartInfo =
             {
-                FileName = wordLoaderSettings.PathStem,
+                FileName = "mystem",
                 Arguments = $"-nli {wordLoaderSettings.PathTextFile}",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,

@@ -35,6 +35,6 @@ public class FileWordLoader(
 
     private static bool IsBoring(string line)
     {
-        return line.Contains("PR") || line.Contains("PART") || line.Contains("CONJ");
+        return line.Contains("=PR=") || line.Contains("=PART=") || line.Contains("=CONJ=");
     }
 }

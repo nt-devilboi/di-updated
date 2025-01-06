@@ -1,4 +1,4 @@
-namespace Tagloud2.Abstract;
+namespace TagCloud2.Abstract;
 
 public interface ITagCloudController
 {

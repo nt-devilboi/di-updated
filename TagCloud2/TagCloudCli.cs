@@ -1,7 +1,6 @@
 using CommandLine;
 using TagCloud2.Abstract;
 using TagCloud2.Options;
-using Tagloud2.Abstract;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Result;
@@ -14,12 +13,12 @@ public class TagCloudCli(
     AppSettings appSettings,
     AbstractFactoryBitMap factoryCloudBitMap,
     ILogger logger,
-    IInputData inputData)
+    IInputData consoleData)
     : ITagCloudController
 {
     public void Run()
     {
-        Parser.Default.ParseArguments<CreateTagCloud>(inputData.GetArgs())
+        Parser.Default.ParseArguments<CreateTagCloud>(consoleData.GetArgs())
             .WithParsed(CreateCloud)
             .WithNotParsed(HanderError);
     }
@@ -44,7 +43,7 @@ public class TagCloudCli(
         return Result.Ok();
     }
 
-    private Result<ITagCloudImage> CreateBitMap(None obj)
+    private Result<ITagCloudImage> CreateBitMap()
     {
         return factoryCloudBitMap.Create();
     }
