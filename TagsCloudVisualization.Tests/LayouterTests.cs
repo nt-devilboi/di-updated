@@ -1,10 +1,9 @@
 using System.Drawing;
 using FluentAssertions;
-using TagsCloudVisualization;
 using TagsCloudVisualization.Settings;
-using TagsCloudVisuliazation.Test.Extension;
+using TagsCloudVisualization.Test.Extension;
 
-namespace TagsCloudVisuliazation.Test;
+namespace TagsCloudVisualization.Tests;
 
 public class LayouterTests
 {
@@ -16,7 +15,7 @@ public class LayouterTests
         {
             Size = new Size(y,x)
         };
-        Action action = () => new CircularCloudLayouter(setting);
+        Action action = () => new TagsCloudVisualization.CircularCloudLayouter(setting);
         action.Should().Throw<ArgumentException>();
     }
 
@@ -27,7 +26,7 @@ public class LayouterTests
         {
             Size = new Size(500,500)
         };
-        var layoter = new CircularCloudLayouter(setting);
+        var layoter = new TagsCloudVisualization.CircularCloudLayouter(setting);
 
         CheckAllRectanglesHasNeighbor(layoter);
     }
@@ -45,7 +44,7 @@ public class LayouterTests
         };
         
         
-        var layoter = new CircularCloudLayouter(setting);
+        var layoter = new TagsCloudVisualization.CircularCloudLayouter(setting);
         var list = new List<Rectangle>();
         list.Add(layoter.PutNextRectangle(new Size(widthRec1, heightRec1)));
 
@@ -55,7 +54,7 @@ public class LayouterTests
         rec.HasNeighbor(list).Should().BeTrue();
     }
 
-    private void CheckAllRectanglesHasNeighbor(CircularCloudLayouter layoter)
+    private void CheckAllRectanglesHasNeighbor(TagsCloudVisualization.CircularCloudLayouter layoter)
     {
         var list = new List<Rectangle>();
         for (var i = 0; i < 30; i++)

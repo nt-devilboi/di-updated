@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace TagsCloudVisuliazation.Test.Extension;
+namespace TagsCloudVisualization.Test.Extension;
 
 public static class RectangleExtension
 {

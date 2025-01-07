@@ -1,10 +1,9 @@
 using System.Drawing;
 
-namespace TagsCloudVisualization;
+namespace TagsCloudVisualization.Abstraction;
 
 public interface ITagCloudImage : IDisposable
 {
     Size Size();
     void DrawString(RectangleTagCloud rec);
-    void Save();
 }

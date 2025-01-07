@@ -19,13 +19,7 @@ public class TagCloudCli(
     public void Run()
     {
         Parser.Default.ParseArguments<CreateTagCloud>(consoleData.GetArgs())
-            .WithParsed(CreateCloud)
-            .WithNotParsed(HanderError);
-    }
-
-    private void HanderError(IEnumerable<Error> errors)
-    {
-        throw new NotImplementedException();
+            .WithParsed(CreateCloud);
     }
 
     private void CreateCloud(CreateTagCloud createTagCloud)
@@ -37,7 +31,7 @@ public class TagCloudCli(
             .OnFail(logger.WriteLine);
     }
 
-    private Result<None> SaveCloud(ITagCloudImage tagCloudImage)
+    private static Result<None> SaveCloud(ITagCloudSave tagCloudImage)
     {
         tagCloudImage.Save();
         return Result.Ok();
@@ -60,7 +54,7 @@ public class TagCloudCli(
         appSettings.TagCloudSettings.Font = createTagCloud.Font;
 
         appSettings.WordLoaderSettings.PathTextFile = createTagCloud.PathToWords;
-        appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
+        // appSettings.WordLoaderSettings.PathStem = createTagCloud.StemPath;
 
         return Result.Ok();
     }

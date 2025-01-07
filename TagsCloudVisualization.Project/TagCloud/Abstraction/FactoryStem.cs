@@ -4,26 +4,26 @@ using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization.Abstraction;
 
-public sealed class FactoryStem(WordLoaderSettings wordLoaderSettings)
+public class FactoryStem(WordLoaderSettings wordLoaderSettings)
 {
     private static IStemReader CreateStem(WordLoaderSettings cloudSettings)
     {
         return new StemReader(cloudSettings);
     }
 
-    public Result<IStemReader> Create()
+    public virtual Result<IStemReader> Create() // virtual для тестов
     {
-        return ValidatePathTextFile(wordLoaderSettings)
-            .Then(ValidPathStem)
+        return ValidateMyStem(wordLoaderSettings)
+            .Then(ValidTextFile)
             .Then(CreateStem);
     }
 
-    private Result<WordLoaderSettings> ValidPathStem(WordLoaderSettings settings)
+    private Result<WordLoaderSettings> ValidTextFile(WordLoaderSettings settings)
     {
-        return settings.Validate(x => File.Exists(x.PathStem), x => $"this not file with text  {x}");
+        return settings.Validate(x => File.Exists(x.PathTextFile), x => $"this not file with text  {x.PathTextFile}");
     }
 
-    private Result<WordLoaderSettings> ValidatePathTextFile(WordLoaderSettings settings)
+    private Result<WordLoaderSettings> ValidateMyStem(WordLoaderSettings settings)
         => settings.Validate(x => StemExists(), x => Errors.Stem.NotFoundInEnvVar());
 
 

@@ -2,7 +2,7 @@ using System.Text;
 using TagCloud2.Abstract;
 using static System.String;
 
-namespace TagsCloudVisuliazation.Test;
+namespace TagsCloudVisualization.Test;
 
 public class Logger : ILogger
 {

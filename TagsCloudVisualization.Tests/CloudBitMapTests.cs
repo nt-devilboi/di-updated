@@ -4,7 +4,7 @@ using FluentAssertions;
 using TagsCloudVisualization;
 using TagsCloudVisualization.Settings;
 
-namespace TagsCloudVisuliazation.Test;
+namespace TagsCloudVisualization.Test;
 
 public class CloudBitMapTests
 {
@@ -21,7 +21,7 @@ public class CloudBitMapTests
 
         var fac = new FactoryBitMap(settings);
 
-        fac.Create().Error.Should().Be($"This Directory Not Exists  {settings.PathDirectory}");
+        fac.Create().Error.Should().Be($"This directory not exists  {settings.PathDirectory}");
     }
  
     [Test]

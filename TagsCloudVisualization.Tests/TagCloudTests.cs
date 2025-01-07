@@ -1,9 +1,9 @@
 using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework.Interfaces;
-using TagsCloudVisualization;
 using TagsCloudVisualization.Settings;
-namespace TagsCloudVisuliazation.Test;
+
+namespace TagsCloudVisualization.Tests;
 
 public class TagCloudTests
 {
@@ -25,7 +25,7 @@ public class TagCloudTests
     [Test]
     public void CreateTagCloud_WithoutIntersect()
     {
-        var circularCloudLayouter = new CircularCloudLayouter(_settings);
+        var circularCloudLayouter = new TagsCloudVisualization.CircularCloudLayouter(_settings);
         var rectangles = new List<Rectangle>();
         for (int i = 0; i < 100; i++)
         {

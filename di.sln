@@ -4,9 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "di", "FractalPainter/di.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagCloud2", "TagCloud2\TagCloud2.csproj", "{8907FB60-CA39-40A9-ACFE-E9D9E8AB6694}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsCloudVisualization", "TagsCloudVisualization\TagsCloudVisualization.csproj", "{399F10E4-0E9F-4369-8B7F-3E6800EE07E7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsCloudVisualization.Project", "TagsCloudVisualization.Project\TagsCloudVisualization.Project.csproj", "{399F10E4-0E9F-4369-8B7F-3E6800EE07E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsCloudVisuliazation.Test", "TagsCloudVisuliazation.Test\TagsCloudVisuliazation.Test.csproj", "{0AE00821-7BD6-4703-93CD-669B3E58416C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsCloudVisualization.Tests", "TagsCloudVisualization.Tests\TagsCloudVisualization.Tests.csproj", "{0AE00821-7BD6-4703-93CD-669B3E58416C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

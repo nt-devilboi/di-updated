@@ -4,7 +4,7 @@ using TagsCloudVisualization.Settings;
 
 namespace TagsCloudVisualization;
 
-public class CloudBitMap : ITagCloudImage, ISizeWord
+public class CloudBitMap : ITagCloudImage, ITagCloudSave
 {
     private readonly Bitmap _bitmap;
     private readonly Graphics _graphics;
@@ -50,11 +50,19 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
         _bitmap.Save(saveFilePath, _tagCloudSettings.ImageFormat);
         Console.WriteLine($"file saved in {saveFilePath}");
         _isSave = true;
+
+        Dispose();
     }
 
     public void Dispose()
     {
-        Dispose(true);
+        if (!_isDisposed)
+        {
+            _bitmap.Dispose();
+            _graphics.Dispose();
+
+            _isDisposed = true;
+        }
     }
 
     private Font GetFont(int emSize)
@@ -64,14 +72,5 @@ public class CloudBitMap : ITagCloudImage, ISizeWord
 
     private void Dispose(bool fromMethod)
     {
-        if (!_isDisposed)
-        {
-            if (fromMethod) Save();
-
-            _bitmap.Dispose();
-            _graphics.Dispose();
-
-            _isDisposed = true;
-        }
     }
 }

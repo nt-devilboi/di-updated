@@ -4,5 +4,5 @@ namespace TagsCloudVisualization;
 
 public interface IWordLoader
 {
-    ImmutableArray<WordPopular> LoadWord();
+    IEnumerable<FrequencyWord> LoadWords();
 }

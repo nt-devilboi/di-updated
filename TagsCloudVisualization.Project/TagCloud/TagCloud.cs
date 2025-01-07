@@ -22,15 +22,15 @@ public class TagCloud(
         return tagCloudImage.AsResult();
     }
 
-    public Result<ITagCloudImage> GenerateCloud(ITagCloudImage tagCloudImage)
+    public Result<ITagCloudSave> GenerateCloud(ITagCloudImage tagCloudImage)
     {
         return Validate(cloudLayouter, tagCloudImage)
             .Then(LoadWord)
             .Then(AddWordInCloud);
     }
 
-    private Result<ITagCloudImage> AddWordInCloud(
-        (ITagCloudImage tagCloudImage, ImmutableArray<WordPopular> words) data)
+    private Result<ITagCloudSave> AddWordInCloud(
+        (ITagCloudImage tagCloudImage, IEnumerable<FrequencyWord> words) data)
     {
         var emSize = tagCloudSettings.EmSize;
         foreach (var word in data.words)
@@ -44,18 +44,21 @@ public class TagCloud(
             emSize = emSize > 14 ? emSize - 1 : 24;
         }
 
-        return data.tagCloudImage.AsResult();
+        return ((ITagCloudSave)data.tagCloudImage).AsResult();
     }
 
 
-    private Result<(ITagCloudImage, ImmutableArray<WordPopular>)> LoadWord(ITagCloudImage tagCloudImage)
+    private Result<(ITagCloudImage, IEnumerable<FrequencyWord>)> LoadWord(ITagCloudImage tagCloudImage)
     {
-        var words = wordLoader.LoadWord();
-        if (words.Length == 0)
+        var words = wordLoader.LoadWords().ToList();
+
+        if (words.Count == 0)
         {
-            return Result.Result.Fail<(ITagCloudImage, ImmutableArray<WordPopular>)>("words are zero");
+            return Result.Result.Fail<(ITagCloudImage, IEnumerable<FrequencyWord>)>(
+                Errors.Stem.TextIsEmptyOrOnlyBoringWords());
         }
 
+        words.Sort((prev, cur) => cur.Count.CompareTo(prev.Count));
         return (tagCloudImage, words);
     }
 }

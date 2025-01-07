@@ -18,9 +18,7 @@ public class CreateTagCloud
 
     [Option('n', "NameFile", Required = true, HelpText = "Name of photos")]
     public required string NamePhoto { get; init; }
-
-    [Option('a', "StemPath", Required = true, HelpText = "stem dir")]
-    public required string StemPath { get; init; }
+    
 
     [Option('e', "emSize", Required = true, HelpText = "Max EmSize of word")]
     public required string EmSize { get; init; }

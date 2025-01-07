@@ -1,14 +1,15 @@
 using System.Drawing;
+using System.Text.RegularExpressions;
 using FakeItEasy;
 using FluentAssertions;
 using TagCloud2;
 using TagCloud2.Abstract;
 using TagCloud2.Infrastructure;
-using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Settings;
+using TagsCloudVisualization.Test;
 
-namespace TagsCloudVisuliazation.Test;
+namespace TagsCloudVisualization.Tests;
 
 public class FullWorkTests
 {
@@ -40,7 +41,18 @@ public class FullWorkTests
     public void TagCloudCli_WorkCorrect()
     {
         SetLineForReadLine(
-            "create -s 1920x1680 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+        [
+            "create",
+            "-s", "1920x1680",
+            "-d", "./../../../photos/",
+            "-n", "TestCli",
+            "-w", "./../../../text.txt",
+            "-e", "50",
+            "-c", "yellow",
+            "-b", "white",
+            "-f", "bpm",
+            "-t", "arial"
+        ]);
 
         _tagCloudCli.Run();
 
@@ -54,7 +66,18 @@ public class FullWorkTests
     public void TagCloudCli_SizeImage_ShouldBeMoreThanZero()
     {
         SetLineForReadLine(
-            "create -s 0x0 -d ./../../../photos/ -n TestCli -w ./../../../text.txt -a ./../../../mystem.exe -e 50 -c yellow -b white -f bpm -t arial");
+        [
+            "create",
+            "-s", "0x0",
+            "-d", "./../../../photos/",
+            "-n", "TestCli",
+            "-w", "./../../../text.txt",
+            "-e", "50",
+            "-c", "yellow",
+            "-b", "white",
+            "-f", "bpm",
+            "-t", "arial"
+        ]);
 
         _tagCloudCli.Run();
 
@@ -62,9 +85,9 @@ public class FullWorkTests
         File.Exists("./../../../photos/tagCloud-(TestCli).Bmp").Should().BeFalse();
     }
 
-    private void SetLineForReadLine(string line)
+    private void SetLineForReadLine(string[] args)
     {
         A.CallTo(() => _inputData.GetArgs())
-            .Returns(line.Split());
+            .Returns(args);
     }
 }

@@ -1,10 +1,9 @@
 using FakeItEasy;
 using FluentAssertions;
-using TagsCloudVisualization;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Result;
 
-namespace TagsCloudVisuliazation.Test;
+namespace TagsCloudVisualization.Tests;
 
 public class WordLoaderTests
 {
@@ -25,9 +24,9 @@ public class WordLoaderTests
     public void WordLoader_LoadWord()
     {
        SetWords(["hello", "hello"]);
-        var words = _fileWordLoader.LoadWord();
+        var words = _fileWordLoader.LoadWords().ToArray();
 
-        words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
+        words[0].Should().BeEquivalentTo(new FrequencyWord("hello", 2));
     }
 
     [Test]
@@ -35,7 +34,7 @@ public class WordLoaderTests
     {
        SetWords([]);
 
-        var words = _fileWordLoader.LoadWord();
+        var words = _fileWordLoader.LoadWords();
         words.Should().BeEmpty();
     }
 
@@ -43,9 +42,9 @@ public class WordLoaderTests
     public void WordLoader_WordInLowerCase()
     {
         SetWords(["HELLO", "hello"]);
-        var words = _fileWordLoader.LoadWord();
+        var words = _fileWordLoader.LoadWords().ToArray();
 
-        words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
+        words[0].Should().BeEquivalentTo(new FrequencyWord("hello", 2));
     }
 
 
@@ -53,10 +52,10 @@ public class WordLoaderTests
     public void WordLoader_CheckWithTwoWord()
     {
         SetWords(["hello", "hello", "andrey"]);
-        var words = _fileWordLoader.LoadWord();
+        var words = _fileWordLoader.LoadWords().ToArray();
 
-        words[0].Should().BeEquivalentTo(new WordPopular("hello", 2));
-        words[1].Should().BeEquivalentTo(new WordPopular("andrey", 1));
+        words[0].Should().BeEquivalentTo(new FrequencyWord("hello", 2));
+        words[1].Should().BeEquivalentTo(new FrequencyWord("andrey", 1));
         words.Length.Should().Be(2);
     }
 
@@ -70,9 +69,9 @@ public class WordLoaderTests
             "andrey", "от=PR="
         ]);
 
-        var words = _fileWordLoader.LoadWord();
-        words[0].Should().BeEquivalentTo(new WordPopular("hello", 1));
-        words[1].Should().BeEquivalentTo(new WordPopular("andrey", 1));
+        var words = _fileWordLoader.LoadWords().ToArray();
+        words[0].Should().BeEquivalentTo(new FrequencyWord("hello", 1));
+        words[1].Should().BeEquivalentTo(new FrequencyWord("andrey", 1));
         words.Length.Should().Be(2);
     }
 

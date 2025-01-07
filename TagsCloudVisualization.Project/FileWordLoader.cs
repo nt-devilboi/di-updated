@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using TagsCloudVisualization.Abstraction;
 using TagsCloudVisualization.Extensions;
 
@@ -8,19 +7,14 @@ public class FileWordLoader(
     FactoryStem steamReader)
     : IWordLoader
 {
-    public ImmutableArray<WordPopular> LoadWord()
+    public IEnumerable<FrequencyWord> LoadWords()
     {
-        return Sort(steamReader.Create().GetValueOrThrow().ReadLines()
+        return steamReader.Create().GetValueOrThrow()
+            .ReadLines()
             .Where(ValidateLexeme)
             .Select(GetLemma)
-            .ToWordPopular()
-            .ToList());
-    }
-    
-    private ImmutableArray<WordPopular> Sort(List<WordPopular> list)
-    {
-        list.Sort((prev, cur) => cur.Count.CompareTo(prev.Count));
-        return [..list];
+            .ToFrequencyPopular()
+            .ToList();
     }
 
     private static bool ValidateLexeme(string x)
